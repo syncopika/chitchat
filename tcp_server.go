@@ -1,9 +1,13 @@
 package main
 
-import "bufio"
-import "fmt"
-import "net"
-import "strings"
+import (
+	"bufio"
+	"fmt"
+	"net"
+	"os"
+	"strconv"
+	"strings"
+)
 
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
 func handleConnection(conn net.Conn) {
@@ -25,12 +29,26 @@ func handleConnection(conn net.Conn) {
 
 func main() {
 
+	// print out the ip that's hosting?
+	// https://stackoverflow.com/questions/23558425/how-do-i-get-the-local-ip-address-in-go
 	port := 2000
+
+	if len(os.Args) > 1 {
+		new_port, err := strconv.Atoi(os.Args[1])
+		if err == nil {
+			port = new_port
+		} else {
+			fmt.Println(err)
+		}
+	}
+	
+	fmt.Println("hello!")
+	fmt.Printf("running on port: %d\n", port)
 
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 
 	if err != nil {
-		fmt.Printf("there was an error listening on port %s!", port)
+		fmt.Printf("there was an error listening on port %s!\n", port)
 		fmt.Println(err)
 	}else{
 		fmt.Println("starting up server...")
