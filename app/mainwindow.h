@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTcpSocket>
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    bool connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket);
 };
 
 #endif // MAINWINDOW_H

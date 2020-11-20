@@ -11,20 +11,26 @@ import (
 
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
 func handleConnection(conn net.Conn) {
-	fmt.Printf("Serving: %s\n", conn.RemoteAddr().String())
+	//fmt.Printf("Serving: %s\n", conn.RemoteAddr().String())
+	fmt.Printf("got a client!\n");
 	
 	for {
+		// can't use a delimiter for a desktop chat app.
+		// try converting the stream into bytes and looking for 0 (null-term)?
 		data, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
 			return
+		} else {
+			fmt.Println("got a message!")
 		}
 		
 		msg := strings.TrimSpace(string(data))
 		fmt.Printf("msg received: %s\n", msg)
 	}
 
-	conn.Close()
+	// TODO: don't close
+	//conn.Close()
 }
 
 func main() {
@@ -50,7 +56,7 @@ func main() {
 	if err != nil {
 		fmt.Printf("there was an error listening on port %s!\n", port)
 		fmt.Println(err)
-	}else{
+	} else {
 		fmt.Println("starting up server...")
 	}
 
