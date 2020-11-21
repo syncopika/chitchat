@@ -3,9 +3,6 @@
 #include <QtDebug>
 #include <QHostAddress>
 
-// this looks helpful! and interesting to study:
-// https://code.qt.io/cgit/qt/qtbase.git/tree/examples/network/network-chat?h=5.15
-// https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -50,12 +47,16 @@ bool MainWindow::connectToServer(QString& username, QString& ipAddr, quint16 por
 
     // send greeting
     // also neat: https://www.qtcentre.org/threads/33924-QString-use-c_str()
-    QString greeting = "hello:" + username;
+    QString greeting = "1"; //MessageType::Hello + username.length() + username;
     std::string greet = greeting.toStdString();
     const char* gstring = greet.c_str();
-    qDebug() << gstring;
-    socket->write(gstring, greeting.length() + 1); // +1 for null-term
+    qDebug() << "going to send:" << gstring;
 
+    qint64 bytesWritten = socket->write(gstring, greeting.length());
+    if(bytesWritten == -1){
+        qDebug() << "there was an error writing to the socket!";
+    }
+    socket->flush();
     // read ok msg from socket
 
     return true;

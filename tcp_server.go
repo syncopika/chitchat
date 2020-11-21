@@ -3,10 +3,16 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"os"
 	"strconv"
-	"strings"
+)
+
+const (
+	Hello = iota + 1 // 1
+	Message          // 2
+	Goodbye          // 3
 )
 
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
@@ -15,18 +21,35 @@ func handleConnection(conn net.Conn) {
 	fmt.Printf("got a client!\n");
 	
 	for {
-		// can't use a delimiter for a desktop chat app.
-		// try converting the stream into bytes and looking for 0 (null-term)?
-		data, err := bufio.NewReader(conn).ReadString('\n')
-		if err != nil {
+
+		data := bufio.NewReader(conn)
+		
+		// TODO: is this buffer size ok?
+		buf := make([]byte, 1024)
+		
+		// step 1: read in the message type
+		if _, err := io.ReadAtLeast(data, buf, 1); err != nil {
+			fmt.Println("error reading from the stream! could not get message type.")
 			fmt.Println(err)
-			return
-		} else {
-			fmt.Println("got a message!")
+			break
 		}
 		
-		msg := strings.TrimSpace(string(data))
-		fmt.Printf("msg received: %s\n", msg)
+		// evaluate
+		fmt.Printf("msg type received: %d\n", buf[0])
+		switch msgType := buf[0]
+		
+		msgType {
+			case Hello:
+				fmt.Println("got a hello message! :D")
+			case Message:
+				fmt.Println("got a regular message to broadcast!")
+			case Goodbye:
+				fmt.Println("someone is leaving! :(")
+		}
+		
+		// step 2: read in the size of the message
+		
+		// step 3: read in the message
 	}
 
 	// TODO: don't close
