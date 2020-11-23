@@ -29,18 +29,29 @@ func handleConnection(conn net.Conn) {
 		
 		// step 1: read in the message type
 		if _, err := io.ReadAtLeast(data, buf, 1); err != nil {
-			fmt.Println("error reading from the stream! could not get message type.")
-			fmt.Println(err)
-			break
+			//fmt.Println("error reading from the stream! could not get message type.")
+			//fmt.Println(err)
+			//break
+			continue
 		}
 		
 		// evaluate
-		fmt.Printf("msg type received: %d\n", buf[0])
-		switch msgType := buf[0]
+		firstByte, err := strconv.Atoi(string(buf[0])) // get int from ascii so we can compare with enum
+		if err != nil {
+			fmt.Println("problem reading first byte of buffer!")
+			continue
+		}
 		
+		fmt.Printf("msg type received: %d\n", firstByte)
+		switch msgType := firstByte
 		msgType {
 			case Hello:
 				fmt.Println("got a hello message! :D")
+				
+				// write to socket
+				msg := "hello there!"
+				conn.Write([]byte(msg))
+			
 			case Message:
 				fmt.Println("got a regular message to broadcast!")
 			case Goodbye:
@@ -50,6 +61,7 @@ func handleConnection(conn net.Conn) {
 		// step 2: read in the size of the message
 		
 		// step 3: read in the message
+
 	}
 
 	// TODO: don't close

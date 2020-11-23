@@ -24,11 +24,15 @@ public:
 
 private slots:
     void go();
+    void connected();
+    void disconnected();
+    void sendMessage();
+    void receiveMessage();
 
 private:
     Ui::MainWindow *ui;
-    bool connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket);
-    bool sendHelloMessage();
+    void connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket);
+    QTcpSocket socket;
 };
 
 #endif // MAINWINDOW_H

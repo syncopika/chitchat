@@ -10,9 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // when go button is pressed,
-    // read in username and ip:port to connect to
-    // and attempt to connect
+    QTcpSocket socket;
+
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(go()));
 }
 
@@ -26,13 +25,52 @@ void MainWindow::go()
     qDebug() << "the ip addr is: " << ipAddr;
     qDebug() << "the port is: " << port;
     qDebug() << "-------------";
-    ui->progressBar->setValue(25);
+    ui->progressBar->setValue(25);    
 
-    QTcpSocket socket;
-    bool connected = connectToServer(username, ipAddr, port.toUShort(), &socket);
+    connect(&socket, SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
+    connect(&socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage()));
+    connect(&socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+
+    connectToServer(username, ipAddr, port.toUShort(), &socket);
 }
 
-bool MainWindow::connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket)
+void MainWindow::connected()
+{
+    // send greeting
+    qDebug() << "connected to server. now sending a greeting";
+
+    QString greeting = "1"; //MessageType::Hello + username.length() + username;
+    std::string greet = greeting.toStdString();
+    const char* gstring = greet.c_str();
+    qDebug() << "going to send:" << gstring;
+
+    qint64 bytesWritten = socket.write(gstring, greeting.length());
+    if(bytesWritten == -1){
+        qDebug() << "there was an error writing to the socket!";
+    }
+    this->socket.flush();
+}
+
+void MainWindow::disconnected()
+{
+    qDebug() << "disconnected from server.";
+}
+
+void MainWindow::sendMessage()
+{
+    // write to socket
+}
+
+void MainWindow::receiveMessage()
+{
+    // read from socket
+    char recvbuf[1024]; // TODO: make a typedef? like DEFAULT_BUF_LEN or something
+    socket.read(recvbuf, 1024);
+    qDebug() << "received message: " << recvbuf;
+}
+
+void MainWindow::connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket)
 {
     // attempt to connect to ip:port
     qDebug() << "attempting to connect to: " << ipAddr << ":" << port;
@@ -42,24 +80,7 @@ bool MainWindow::connectToServer(QString& username, QString& ipAddr, quint16 por
         qDebug() << "successfully connected to server!";
     }else{
         qDebug() << "failed to connect to server :(";
-        return false;
     }
-
-    // send greeting
-    // also neat: https://www.qtcentre.org/threads/33924-QString-use-c_str()
-    QString greeting = "1"; //MessageType::Hello + username.length() + username;
-    std::string greet = greeting.toStdString();
-    const char* gstring = greet.c_str();
-    qDebug() << "going to send:" << gstring;
-
-    qint64 bytesWritten = socket->write(gstring, greeting.length());
-    if(bytesWritten == -1){
-        qDebug() << "there was an error writing to the socket!";
-    }
-    socket->flush();
-    // read ok msg from socket
-
-    return true;
 }
 
 MainWindow::~MainWindow()

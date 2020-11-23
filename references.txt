@@ -1,6 +1,12 @@
 // this looks helpful! and interesting to study:
 https://code.qt.io/cgit/qt/qtbase.git/tree/examples/network/network-chat?h=5.15
 
+https://www.qtcentre.org/threads/33924-QString-use-c_str()
+
 https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 https://www.bogotobogo.com/Qt/Qt5_QTcpSocket_Signals_Slots.php
 https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
+https://stackoverflow.com/questions/46248797/qt-connect-in-constructor-not-connecting
+
+// golang stuff
+https://gist.github.com/kenshinx/5796276
