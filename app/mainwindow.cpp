@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QtDebug>
 #include <QHostAddress>
+#include <QMetaEnum>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -29,18 +30,26 @@ void MainWindow::go()
 
     connect(&socket, SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
     connect(&socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage()));
+    connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage())); // this one might not be necessary?
     connect(&socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
 
-    connectToServer(username, ipAddr, port.toUShort(), &socket);
+    connectToServer(ipAddr, port.toUShort(), &socket);
 }
+
 
 void MainWindow::connected()
 {
     // send greeting
     qDebug() << "connected to server. now sending a greeting";
 
-    QString greeting = "1"; //MessageType::Hello + username.length() + username;
+    QString msgType;
+    msgType.setNum((int)MessageType::Hello);
+
+    QString usernameLength;
+    usernameLength.setNum(username.length());
+
+    QString greeting = msgType + ":" + usernameLength + ":"  + username;
+
     std::string greet = greeting.toStdString();
     const char* gstring = greet.c_str();
     qDebug() << "going to send:" << gstring;
@@ -50,6 +59,8 @@ void MainWindow::connected()
         qDebug() << "there was an error writing to the socket!";
     }
     this->socket.flush();
+
+    // move to chat area screen
 }
 
 void MainWindow::disconnected()
@@ -65,12 +76,12 @@ void MainWindow::sendMessage()
 void MainWindow::receiveMessage()
 {
     // read from socket
-    char recvbuf[1024]; // TODO: make a typedef? like DEFAULT_BUF_LEN or something
+    char recvbuf[1024]; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
     socket.read(recvbuf, 1024);
     qDebug() << "received message: " << recvbuf;
 }
 
-void MainWindow::connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket)
+void MainWindow::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
 {
     // attempt to connect to ip:port
     qDebug() << "attempting to connect to: " << ipAddr << ":" << port;

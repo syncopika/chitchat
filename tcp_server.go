@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -15,13 +16,17 @@ const (
 	Goodbye          // 3
 )
 
+func dissectMessage(buffer []byte) []string {
+	msg := string(buffer)
+	return strings.Split(msg, ":")
+}
+
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
 func handleConnection(conn net.Conn) {
 	//fmt.Printf("Serving: %s\n", conn.RemoteAddr().String())
 	fmt.Printf("got a client!\n");
 	
 	for {
-
 		data := bufio.NewReader(conn)
 		
 		// TODO: is this buffer size ok?
@@ -36,6 +41,7 @@ func handleConnection(conn net.Conn) {
 		}
 		
 		// evaluate
+		// TODO: we really need to refactor to ensure we get all the bytes in the message!
 		firstByte, err := strconv.Atoi(string(buf[0])) // get int from ascii so we can compare with enum
 		if err != nil {
 			fmt.Println("problem reading first byte of buffer!")
@@ -48,10 +54,19 @@ func handleConnection(conn net.Conn) {
 			case Hello:
 				fmt.Println("got a hello message! :D")
 				
-				// write to socket
-				msg := "hello there!"
-				conn.Write([]byte(msg))
-			
+				// get user name?
+				tokens := dissectMessage(buf)
+				if len(tokens) != 3 {
+					fmt.Println("message from buffer does not have 3 parts! :(")
+				} else {
+				
+					username := tokens[2]
+				
+					// write to socket
+					msg := "hello there " + username + "!"
+					conn.Write([]byte(msg))
+				}
+				
 			case Message:
 				fmt.Println("got a regular message to broadcast!")
 			case Goodbye:
@@ -60,8 +75,8 @@ func handleConnection(conn net.Conn) {
 		
 		// step 2: read in the size of the message
 		
+		
 		// step 3: read in the message
-
 	}
 
 	// TODO: don't close

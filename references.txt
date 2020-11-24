@@ -10,3 +10,5 @@ https://stackoverflow.com/questions/46248797/qt-connect-in-constructor-not-conne
 
 // golang stuff
 https://gist.github.com/kenshinx/5796276
+https://stackoverflow.com/questions/26999615/go-tcp-read-is-non-blocking
+https://yourbasic.org/golang/gotcha/

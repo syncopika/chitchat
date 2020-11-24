@@ -31,8 +31,12 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    void connectToServer(QString& username, QString& ipAddr, quint16 port, QTcpSocket* socket);
     QTcpSocket socket;
+    QString username;
+    QString ipAddr;
+    QString port;
+
+    void connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket);
 };
 
 #endif // MAINWINDOW_H
