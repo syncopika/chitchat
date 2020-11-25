@@ -1,9 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QtDebug>
-#include <QHostAddress>
-#include <QMetaEnum>
 
+#include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,87 +9,24 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QTcpSocket socket;
+    // set up qwidgets for the windows
+    stackedWidget = new QStackedWidget;
+    QMainWindow::setCentralWidget(stackedWidget);
 
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(go()));
+    loginPage = new Login;
+    chatArea = new ChatArea;
+
+    stackedWidget->addWidget(loginPage);
+    stackedWidget->addWidget(chatArea);
+    stackedWidget->setCurrentWidget(loginPage);
+
+    // receive signal from the login page to move to chat area
+    connect(loginPage, SIGNAL(goToChat()), this, SLOT(goToChat()));
 }
 
-void MainWindow::go()
-{
-    QString username = ui->lineEdit->text();
-    QString ipAddr   = ui->lineEdit_2->text();
-    QString port     = ui->lineEdit_3->text();
-
-    qDebug() << "the username is: " << username;
-    qDebug() << "the ip addr is: " << ipAddr;
-    qDebug() << "the port is: " << port;
-    qDebug() << "-------------";
-    ui->progressBar->setValue(25);    
-
-    connect(&socket, SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
-    connect(&socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage())); // this one might not be necessary?
-    connect(&socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
-
-    connectToServer(ipAddr, port.toUShort(), &socket);
-}
-
-
-void MainWindow::connected()
-{
-    // send greeting
-    qDebug() << "connected to server. now sending a greeting";
-
-    QString msgType;
-    msgType.setNum((int)MessageType::Hello);
-
-    QString usernameLength;
-    usernameLength.setNum(username.length());
-
-    QString greeting = msgType + ":" + usernameLength + ":"  + username;
-
-    std::string greet = greeting.toStdString();
-    const char* gstring = greet.c_str();
-    qDebug() << "going to send:" << gstring;
-
-    qint64 bytesWritten = socket.write(gstring, greeting.length());
-    if(bytesWritten == -1){
-        qDebug() << "there was an error writing to the socket!";
-    }
-    this->socket.flush();
-
-    // move to chat area screen
-}
-
-void MainWindow::disconnected()
-{
-    qDebug() << "disconnected from server.";
-}
-
-void MainWindow::sendMessage()
-{
-    // write to socket
-}
-
-void MainWindow::receiveMessage()
-{
-    // read from socket
-    char recvbuf[1024]; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
-    socket.read(recvbuf, 1024);
-    qDebug() << "received message: " << recvbuf;
-}
-
-void MainWindow::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
-{
-    // attempt to connect to ip:port
-    qDebug() << "attempting to connect to: " << ipAddr << ":" << port;
-    socket->connectToHost(ipAddr, port);
-
-    if(socket->waitForConnected(3000)){
-        qDebug() << "successfully connected to server!";
-    }else{
-        qDebug() << "failed to connect to server :(";
-    }
+void MainWindow::goToChat(){
+    // change the page
+    stackedWidget->setCurrentWidget(chatArea);
 }
 
 MainWindow::~MainWindow()

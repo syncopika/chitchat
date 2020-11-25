@@ -27,13 +27,19 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    chatarea.cpp \
+    login.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    chatarea.h \
+    login.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    login.ui \
+    chatarea.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

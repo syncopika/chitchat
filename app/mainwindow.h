@@ -1,11 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "login.h"
+#include "chatarea.h"
+
 #include <QMainWindow>
 #include <QTcpSocket>
+#include <QStackedWidget>
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -13,30 +17,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    enum MessageType {
-        Hello = 1,   //1
-        Message,     //2
-        Goodbye      //3
-    };
-
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
-    void go();
-    void connected();
-    void disconnected();
-    void sendMessage();
-    void receiveMessage();
+    void goToChat();
 
 private:
     Ui::MainWindow *ui;
-    QTcpSocket socket;
-    QString username;
-    QString ipAddr;
-    QString port;
-
-    void connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket);
+    QStackedWidget* stackedWidget;
+    Login* loginPage;
+    ChatArea* chatArea;
 };
 
 #endif // MAINWINDOW_H
