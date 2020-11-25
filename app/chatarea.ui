@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>496</width>
-    <height>568</height>
+    <height>543</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QTextBrowser" name="usersOnlineDisplay">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>190</y>
-     <width>141</width>
+     <x>330</x>
+     <y>180</y>
+     <width>111</width>
      <height>111</height>
     </rect>
    </property>
@@ -27,7 +27,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>520</y>
+     <y>440</y>
      <width>261</width>
      <height>31</height>
     </rect>
@@ -36,8 +36,8 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>310</y>
+     <x>330</x>
+     <y>300</y>
      <width>71</width>
      <height>20</height>
     </rect>
@@ -49,7 +49,7 @@
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>330</x>
      <y>20</y>
      <width>111</width>
      <height>101</height>
@@ -62,15 +62,15 @@
      <x>10</x>
      <y>20</y>
      <width>281</width>
-     <height>491</height>
+     <height>411</height>
     </rect>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>500</y>
+     <x>330</x>
+     <y>480</y>
      <width>91</width>
      <height>23</height>
     </rect>
@@ -83,7 +83,7 @@
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>510</y>
+     <y>430</y>
      <width>31</width>
      <height>41</height>
     </rect>
@@ -95,8 +95,8 @@
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>340</y>
+     <x>330</x>
+     <y>320</y>
      <width>101</width>
      <height>22</height>
     </rect>
@@ -105,8 +105,8 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>530</y>
+     <x>330</x>
+     <y>510</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -118,8 +118,8 @@
   <widget class="QTextBrowser" name="textBrowser_3">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>380</y>
+     <x>330</x>
+     <y>360</y>
      <width>101</width>
      <height>91</height>
     </rect>
@@ -128,8 +128,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>170</y>
+     <x>350</x>
+     <y>160</y>
      <width>71</width>
      <height>20</height>
     </rect>
@@ -141,8 +141,8 @@
   <widget class="QLabel" name="usernameLabel">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>130</y>
+     <x>340</x>
+     <y>120</y>
      <width>111</width>
      <height>20</height>
     </rect>
