@@ -22,6 +22,7 @@ public:
 
 private slots:
     void goToChat();
+    void resize(int index);
 
 private:
     Ui::MainWindow *ui;

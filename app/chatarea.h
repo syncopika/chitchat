@@ -18,6 +18,8 @@ public:
 private:
     Ui::ChatArea* ui;
 
+    QString messageInput;
+
 signals:
 
 public slots:

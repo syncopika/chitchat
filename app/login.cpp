@@ -67,7 +67,7 @@ void Login::disconnected()
 
 void Login::sendMessage()
 {
-    // write to socket
+    // message was written to socket
 }
 
 void Login::receiveMessage()

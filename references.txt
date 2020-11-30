@@ -8,6 +8,9 @@ https://www.bogotobogo.com/Qt/Qt5_QTcpSocket_Signals_Slots.php
 https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
 https://stackoverflow.com/questions/46248797/qt-connect-in-constructor-not-connecting
 https://www.qtcentre.org/threads/68786-Switching-between-two-ui-forms-QMainWindow-screens
+https://stackoverflow.com/questions/23511430/qt-qstackedwidget-resizing-issue/34300567
+https://stackoverflow.com/questions/14480696/resize-qstackedwidget-to-the-page-which-is-opened
+https://doc.qt.io/archives/qt-4.8/application-windows.html
 
 // golang stuff
 https://gist.github.com/kenshinx/5796276
