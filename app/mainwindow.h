@@ -29,6 +29,7 @@ private:
     QStackedWidget* stackedWidget;
     Login* loginPage;
     ChatArea* chatArea;
+    QTcpSocket* clientSocket;
 };
 
 #endif // MAINWINDOW_H

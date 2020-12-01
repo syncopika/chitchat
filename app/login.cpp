@@ -1,12 +1,13 @@
 #include "login.h"
 #include "ui_login.h"
 
-Login::Login(QWidget *parent) :
+Login::Login(QWidget *parent, QTcpSocket* socket) :
     QWidget(parent),
     ui(new Ui::Login)
 {
     ui->setupUi(this);
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(go()));
+    this->socket = socket;
 }
 
 void Login::go()
@@ -22,12 +23,12 @@ void Login::go()
     qDebug() << "-------------";
     ui->progressBar->setValue(25);
 
-    connect(&socket, SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
-    connect(&socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage())); // this one might not be necessary?
-    connect(&socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+    connect(&(*socket), SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
+    connect(&(*socket), SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(&(*socket), SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage())); // this one might not be necessary?
+    connect(&(*socket), SIGNAL(readyRead()), this, SLOT(receiveMessage()));
 
-    connectToServer(ipAddr, port.toUShort(), &socket);
+    connectToServer(ipAddr, port.toUShort(), &(*socket));
 }
 
 
@@ -49,11 +50,11 @@ void Login::connected()
     const char* gstring = greet.c_str();
     qDebug() << "going to send:" << gstring;
 
-    qint64 bytesWritten = socket.write(gstring, greeting.length());
+    qint64 bytesWritten = socket->write(gstring, greeting.length());
     if(bytesWritten == -1){
         qDebug() << "there was an error writing to the socket!";
     }
-    this->socket.flush();
+    socket->flush();
 
     ui->progressBar->setValue(100);
     // move to chat area screen
@@ -74,7 +75,7 @@ void Login::receiveMessage()
 {
     // read from socket
     char recvbuf[1024]; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
-    socket.read(recvbuf, 1024);
+    socket->read(recvbuf, 1024);
     qDebug() << "received message: " << recvbuf;
 }
 

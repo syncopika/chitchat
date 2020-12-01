@@ -13,8 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     stackedWidget = new QStackedWidget;
     QMainWindow::setCentralWidget(stackedWidget);
 
-    loginPage = new Login;
-    chatArea = new ChatArea;
+    clientSocket = new QTcpSocket();
+    loginPage = new Login(nullptr, clientSocket);
+    chatArea = new ChatArea(nullptr, clientSocket);
 
     stackedWidget->addWidget(loginPage);
     stackedWidget->addWidget(chatArea);

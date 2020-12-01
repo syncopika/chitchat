@@ -13,7 +13,7 @@ class Login : public QWidget
     Q_OBJECT
 
 public:
-    explicit Login(QWidget *parent = nullptr);
+    explicit Login(QWidget *parent = nullptr, QTcpSocket* socket = nullptr);
     ~Login();
 
     enum MessageType {
@@ -37,7 +37,7 @@ private slots:
 private:
     Ui::Login* ui;
 
-    QTcpSocket socket;
+    QTcpSocket* socket;
     QString username;
     QString ipAddr;
     QString port;
