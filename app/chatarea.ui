@@ -85,7 +85,7 @@
     <string>edit emoticons</string>
    </property>
   </widget>
-  <widget class="QCommandLinkButton" name="commandLinkButton">
+  <widget class="QCommandLinkButton" name="sendMessage">
    <property name="geometry">
     <rect>
      <x>270</x>

@@ -40,5 +40,8 @@ void MainWindow::resize(int index){
 
 MainWindow::~MainWindow()
 {
+    delete clientSocket;
+    delete loginPage;
+    delete chatArea;
     delete ui;
 }

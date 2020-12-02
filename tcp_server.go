@@ -66,7 +66,6 @@ func handleConnection(conn net.Conn) {
 					msg := "hello there " + username + "!"
 					conn.Write([]byte(msg))
 				}
-				
 			case Message:
 				fmt.Println("got a regular message to broadcast!")
 			case Goodbye:

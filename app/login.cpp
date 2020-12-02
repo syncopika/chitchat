@@ -95,5 +95,5 @@ void Login::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
 
 Login::~Login()
 {
-    delete ui;
+    //delete ui; // handled by main window
 }

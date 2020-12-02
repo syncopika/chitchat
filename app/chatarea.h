@@ -21,10 +21,16 @@ private:
     QTcpSocket* socket;
     QString messageInput;
 
+    bool sendMessage(QString msg);
+
 signals:
 
 private slots:
     void receiveMessage();
+    void send();
+    void disconnect();
+    void addEmoticon();
+    void removeEmoticon();
 };
 
 #endif // CHATAREA_H
