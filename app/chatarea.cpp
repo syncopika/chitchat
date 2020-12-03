@@ -1,4 +1,5 @@
 #include "chatarea.h"
+#include "userdata.h"
 #include "ui_chatarea.h"
 
 ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket) :
@@ -11,6 +12,7 @@ ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket) :
 
     // also need to know who else is in the chat
     // also need username!
+    // emit signal to mainwindow to receive userdata
 }
 
 void ChatArea::receiveMessage()
@@ -40,10 +42,18 @@ bool ChatArea::sendMessage(QString msg){
     qDebug() << "going to send:" << mstring;
 
     qint64 bytesWritten = socket->write(mstring, message.length());
+    socket->flush();
+
     if(bytesWritten == -1){
         qDebug() << "there was an error writing to the socket!";
+        return false;
     }
-    socket->flush();
+
+    return true;
+}
+
+void ChatArea::getUserData(UserData* data){
+    userData = data;
 }
 
 void ChatArea::disconnect(){
@@ -62,5 +72,5 @@ void ChatArea::removeEmoticon(){
 
 ChatArea::~ChatArea()
 {
-    //delete ui; // this is handled by the main window
+    delete ui;
 }

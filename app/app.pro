@@ -34,7 +34,8 @@ SOURCES += \
 HEADERS += \
         mainwindow.h \
     chatarea.h \
-    login.h
+    login.h \
+    userdata.h
 
 FORMS += \
         mainwindow.ui \

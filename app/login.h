@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpSocket>
+#include "userdata.h"
 
 namespace Ui {
     class Login;
@@ -17,13 +18,15 @@ public:
     ~Login();
 
     enum MessageType {
-        Hello = 1,   //1
-        Message,     //2
-        Goodbye      //3
+        Hello = 1,    //1
+        Message,      //2
+        Goodbye,      //3
+        CurrentUsers, //4 - should deliver a list of current users
     };
 
 signals:
     void goToChat();
+    void sendUserData(UserData* data);
 
 public slots:
 

@@ -1,4 +1,5 @@
 #include "login.h"
+#include "userdata.h"
 #include "ui_login.h"
 
 Login::Login(QWidget *parent, QTcpSocket* socket) :
@@ -13,9 +14,9 @@ Login::Login(QWidget *parent, QTcpSocket* socket) :
 void Login::go()
 {
     // how to get the username available in the chat page?
-    QString username = ui->lineEdit->text();
-    QString ipAddr   = ui->lineEdit_2->text();
-    QString port     = ui->lineEdit_3->text();
+    username = ui->lineEdit->text();
+    ipAddr   = ui->lineEdit_2->text();
+    port     = ui->lineEdit_3->text();
 
     qDebug() << "the username is: " << username;
     qDebug() << "the ip addr is: " << ipAddr;
@@ -44,6 +45,15 @@ void Login::connected()
     QString usernameLength;
     usernameLength.setNum(username.length());
 
+    // collect avatar image
+
+    // allocate userdata struct
+    UserData* data = new UserData();
+    data->username = username;
+
+    // emit signal to send its pointer to mainwindow
+    emit sendUserData(data);
+
     QString greeting = msgType + ":" + usernameLength + ":"  + username;
 
     std::string greet = greeting.toStdString();
@@ -57,6 +67,7 @@ void Login::connected()
     socket->flush();
 
     ui->progressBar->setValue(100);
+
     // move to chat area screen
     emit goToChat();
 }
@@ -95,5 +106,5 @@ void Login::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
 
 Login::~Login()
 {
-    //delete ui; // handled by main window
+    delete ui;
 }

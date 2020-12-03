@@ -3,6 +3,7 @@
 
 #include "login.h"
 #include "chatarea.h"
+#include "userdata.h"
 
 #include <QMainWindow>
 #include <QTcpSocket>
@@ -23,6 +24,7 @@ public:
 private slots:
     void goToChat();
     void resize(int index);
+    void getUserData(UserData* data);
 
 private:
     Ui::MainWindow *ui;
@@ -30,6 +32,7 @@ private:
     Login* loginPage;
     ChatArea* chatArea;
     QTcpSocket* clientSocket;
+    UserData* userData;
 };
 
 #endif // MAINWINDOW_H

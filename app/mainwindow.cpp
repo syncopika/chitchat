@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "userdata.h"
 #include "ui_mainwindow.h"
 
 #include <QtDebug>
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     stackedWidget = new QStackedWidget;
     QMainWindow::setCentralWidget(stackedWidget);
 
+    userData = nullptr;
     clientSocket = new QTcpSocket();
     loginPage = new Login(nullptr, clientSocket);
     chatArea = new ChatArea(nullptr, clientSocket);
@@ -22,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     stackedWidget->setCurrentWidget(loginPage);
 
     // receive signal from the login page to move to chat area
+    connect(loginPage, SIGNAL(sendUserData(UserData*)), this, SLOT(getUserData(UserData*)));
     connect(loginPage, SIGNAL(goToChat()), this, SLOT(goToChat()));
     connect(stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(resize(int)));
 }
@@ -38,10 +41,13 @@ void MainWindow::resize(int index){
     adjustSize();
 }
 
+void MainWindow::getUserData(UserData* data){
+    qDebug() << "got the userdata in mainwindow! username: " + data->username;
+    userData = data;
+}
+
 MainWindow::~MainWindow()
 {
     delete clientSocket;
-    delete loginPage;
-    delete chatArea;
     delete ui;
 }
