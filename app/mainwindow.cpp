@@ -26,12 +26,16 @@ MainWindow::MainWindow(QWidget *parent) :
     // receive signal from the login page to move to chat area
     connect(loginPage, SIGNAL(sendUserData(UserData*)), this, SLOT(getUserData(UserData*)));
     connect(loginPage, SIGNAL(goToChat()), this, SLOT(goToChat()));
+    connect(this, SIGNAL(giveUserData(UserData*)), chatArea, SLOT(getUserData(UserData*)));
     connect(stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(resize(int)));
 }
 
 void MainWindow::goToChat(){
     // change the page
     stackedWidget->setCurrentWidget(chatArea);
+
+    // give chatArea userdata info
+    emit giveUserData(userData);
 }
 
 void MainWindow::resize(int index){

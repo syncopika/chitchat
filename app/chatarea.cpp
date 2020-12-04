@@ -10,29 +10,51 @@ ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket) :
     this->socket = socket;
     connect(ui->sendMessage, SIGNAL(clicked()), this, SLOT(send()));
 
-    // also need to know who else is in the chat
-    // also need username!
-    // emit signal to mainwindow to receive userdata
+    //ui->chatDisplay->append("ndfjkndkj");
+    setUp();
+}
+
+// have a signal from mainwindow to do setup? like when the page changes
+void ChatArea::setUp(){
+    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
+
+    // make this move back to the login page
+    // also disconnect the signals so they don't interfere with the login page
+    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+
+    connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
 }
 
 void ChatArea::receiveMessage()
 {
     // read from socket
-    char recvbuf[1024]; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
+    char recvbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
     socket->read(recvbuf, 1024);
-    qDebug() << "received message: " << recvbuf;
+    QString msg(recvbuf);
+    msg = msg.trimmed();
+    qDebug() << "received a message:" << msg;
+
+    // check first char to determine what kind of message it is?
+    QStringList tokens = msg.split(":");
+    if(tokens.length() == 3){
+        // put the msg in the UI
+        ui->chatDisplay->append(tokens[1] + ":" + tokens[2]);
+        socket->flush();
+    }
 }
 
 void ChatArea::send(){
     QString msg = ui->enterMessage->text();
     msg = msg.trimmed();
-    msg = "2:<some user>:" + msg; // TODO: need to know who sent the message! also a timestamp would be nice (oh but that contains colons :/ )"
+    msg = "2:" + userData->username + ":" + msg; // this is a bad format. what if the msg has colons??
+    qDebug() << "going to send: " << msg;
     if(msg != ""){
         bool msgSent = sendMessage(msg);
         if(!msgSent){
             qDebug() << "message failed to send! :(";
         }
     }
+    socket->flush();
 }
 
 bool ChatArea::sendMessage(QString msg){
@@ -53,12 +75,14 @@ bool ChatArea::sendMessage(QString msg){
 }
 
 void ChatArea::getUserData(UserData* data){
+    qDebug() << "got the userdata in chatarea!";
     userData = data;
 }
 
 void ChatArea::disconnect(){
     // disconnect from socket
     // return to login page (emit a signal for that?)
+    // unhook signal/slots?
 }
 
 void ChatArea::addEmoticon(){

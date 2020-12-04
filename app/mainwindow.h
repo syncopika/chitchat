@@ -21,6 +21,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void giveUserData(UserData* data);
+
 private slots:
     void goToChat();
     void resize(int index);

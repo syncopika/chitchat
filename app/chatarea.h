@@ -30,9 +30,8 @@ private:
     QString messageInput;
     UserData* userData;
 
+    void setUp();
     bool sendMessage(QString msg);
-
-signals:
 
 private slots:
     void receiveMessage();

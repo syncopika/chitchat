@@ -44,9 +44,9 @@ private:
     QString username;
     QString ipAddr;
     QString port;
+    UserData* userdata;
 
     void connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket);
-
 };
 
 #endif // LOGIN_H

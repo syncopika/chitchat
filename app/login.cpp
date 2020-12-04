@@ -13,7 +13,8 @@ Login::Login(QWidget *parent, QTcpSocket* socket) :
 
 void Login::go()
 {
-    // how to get the username available in the chat page?
+    userdata = new UserData();
+
     username = ui->lineEdit->text();
     ipAddr   = ui->lineEdit_2->text();
     port     = ui->lineEdit_3->text();
@@ -24,10 +25,9 @@ void Login::go()
     qDebug() << "-------------";
     ui->progressBar->setValue(25);
 
-    connect(&(*socket), SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
-    connect(&(*socket), SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(&(*socket), SIGNAL(bytesWritten(qint64)), this, SLOT(sendMessage())); // this one might not be necessary?
-    connect(&(*socket), SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+    connect(socket, SIGNAL(connected()), this, SLOT(connected())); // why can't I do this in the constructor?
+    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
 
     connectToServer(ipAddr, port.toUShort(), &(*socket));
 }
@@ -47,12 +47,10 @@ void Login::connected()
 
     // collect avatar image
 
-    // allocate userdata struct
-    UserData* data = new UserData();
-    data->username = username;
+    userdata->username = username;
 
     // emit signal to send its pointer to mainwindow
-    emit sendUserData(data);
+    emit sendUserData(userdata);
 
     QString greeting = msgType + ":" + usernameLength + ":"  + username;
 
@@ -67,6 +65,11 @@ void Login::connected()
     socket->flush();
 
     ui->progressBar->setValue(100);
+
+    // disconnect signals/slots to not interfere with the chat page
+    disconnect(socket, SIGNAL(connected()), this, SLOT(connected()));
+    disconnect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    disconnect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
 
     // move to chat area screen
     emit goToChat();
