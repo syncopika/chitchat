@@ -8,31 +8,29 @@ ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket) :
 {
     ui->setupUi(this);
     this->socket = socket;
-    connect(ui->sendMessage, SIGNAL(clicked()), this, SLOT(send()));
 
-    //ui->chatDisplay->append("ndfjkndkj");
+    connect(ui->sendMessage, SIGNAL(clicked()), this, SLOT(send()));
     setUp();
 }
 
 // have a signal from mainwindow to do setup? like when the page changes
 void ChatArea::setUp(){
-    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
-
-    // make this move back to the login page
-    // also disconnect the signals so they don't interfere with the login page
-    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-
-    connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+    QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+    QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(disconnect()));
 }
 
-void ChatArea::receiveMessage()
-{
+void ChatArea::tearDown(){
+    QObject::disconnect(socket, SIGNAL(disconnected()), this, SLOT(disconnect()));
+    QObject::disconnect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+}
+
+void ChatArea::receiveMessage(){
     // read from socket
     char recvbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
     socket->read(recvbuf, 1024);
     QString msg(recvbuf);
     msg = msg.trimmed();
-    qDebug() << "received a message:" << msg;
+    qDebug() << "ChatArea: received a message:" << msg;
 
     // check first char to determine what kind of message it is?
     QStringList tokens = msg.split(":");
@@ -47,21 +45,19 @@ void ChatArea::send(){
     QString msg = ui->enterMessage->text();
     msg = msg.trimmed();
     msg = "2:" + userData->username + ":" + msg; // this is a bad format. what if the msg has colons??
-    qDebug() << "going to send: " << msg;
+
     if(msg != ""){
         bool msgSent = sendMessage(msg);
         if(!msgSent){
-            qDebug() << "message failed to send! :(";
+            qDebug() << "ChatArea: message failed to send! :(";
         }
     }
-    socket->flush();
 }
 
 bool ChatArea::sendMessage(QString msg){
-
     std::string message = msg.toStdString();
     const char* mstring = message.c_str();
-    qDebug() << "going to send:" << mstring;
+    qDebug() << "ChatArea: going to send:" << mstring;
 
     qint64 bytesWritten = socket->write(mstring, message.length());
     socket->flush();
@@ -75,7 +71,7 @@ bool ChatArea::sendMessage(QString msg){
 }
 
 void ChatArea::getUserData(UserData* data){
-    qDebug() << "got the userdata in chatarea!";
+    qDebug() << "ChatArea: got the userdata!";
     userData = data;
 }
 

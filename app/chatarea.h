@@ -31,6 +31,7 @@ private:
     UserData* userData;
 
     void setUp();
+    void tearDown();
     bool sendMessage(QString msg);
 
 private slots:

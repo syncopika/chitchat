@@ -32,10 +32,9 @@ public slots:
 
 private slots:
     void go();
-    void connected();
-    void disconnected();
+    void connectedToServer();
+    void disconnectedFromServer();
     void sendMessage();
-    void receiveMessage();
 
 private:
     Ui::Login* ui;
@@ -46,6 +45,9 @@ private:
     QString port;
     UserData* userdata;
 
+    void setUp();
+    void tearDown();
+    void sendGreeting();
     void connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket);
 };
 

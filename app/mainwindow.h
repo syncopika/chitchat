@@ -26,6 +26,7 @@ signals:
 
 private slots:
     void goToChat();
+    void goToLogin();
     void resize(int index);
     void getUserData(UserData* data);
 

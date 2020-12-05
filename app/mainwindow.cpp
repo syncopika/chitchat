@@ -30,6 +30,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(resize(int)));
 }
 
+void MainWindow::goToLogin(){
+
+}
+
 void MainWindow::goToChat(){
     // change the page
     stackedWidget->setCurrentWidget(chatArea);
@@ -46,7 +50,7 @@ void MainWindow::resize(int index){
 }
 
 void MainWindow::getUserData(UserData* data){
-    qDebug() << "got the userdata in mainwindow! username: " + data->username;
+    qDebug() << "MainWindow: got the userdata in mainwindow! username: " + data->username;
     userData = data;
 }
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bufio"
+	//"bufio"
 	"fmt"
-	"io"
+	//"io"
 	"net"
 	"os"
 	"strconv"
@@ -24,8 +24,7 @@ type ConnectionInfo struct {
 	id         int
 }
 
-func dissectMessage(buffer []byte) []string {
-	msg := string(buffer)
+func dissectMessage(msg string) []string {
 	return strings.Split(msg, ":")
 }
 
@@ -43,22 +42,31 @@ func handleConnection(conn net.Conn) {
 	fmt.Printf("got a client!\n");
 	
 	for {
-		data := bufio.NewReader(conn)
+		//data := bufio.NewReader(conn)
 		
 		// TODO: is this buffer size ok?
 		buf := make([]byte, 1024)
 		
-		// step 1: read in the message type
+		/* step 1: read in the message type
 		if _, err := io.ReadAtLeast(data, buf, 1); err != nil {
 			//fmt.Println("error reading from the stream! could not get message type.")
 			//fmt.Println(err)
 			//break
 			continue
+		}*/
+		
+		numBytesRead, err := conn.Read(buf)
+		if err != nil {
+			continue
 		}
+		msgString := string(buf)
+		
+		fmt.Printf("%d num bytes read.\n", numBytesRead)
+		fmt.Println("the message: " + msgString)
 		
 		// evaluate
 		// TODO: we really need to refactor to ensure we get all the bytes in the message!
-		firstByte, err := strconv.Atoi(string(buf[0])) // get int from ascii so we can compare with enum
+		firstByte, err := strconv.Atoi(string(msgString[0])) // get int from ascii so we can compare with enum
 		if err != nil {
 			fmt.Println("problem reading first byte of buffer!")
 			continue
@@ -70,7 +78,7 @@ func handleConnection(conn net.Conn) {
 			case Hello:
 				fmt.Println("got a hello message! :D")
 				
-				tokens := dissectMessage(buf) // this is not a good protocol
+				tokens := dissectMessage(msgString) // this is not a good protocol
 				if len(tokens) != 3 {
 					fmt.Println("message from buffer does not have 3 parts! :(")
 				} else {
@@ -79,7 +87,7 @@ func handleConnection(conn net.Conn) {
 				
 					// write to socket
 					msg := "hello there " + username + "!"
-					msg = strconv.Itoa(Message) + ":" + strconv.Itoa(len(msg)) + msg
+					msg = strconv.Itoa(Message) + ":" + strconv.Itoa(len(msg)) + ":" + msg
 					conn.Write([]byte(msg))
 					
 					// new user has joined. need to let everyone know
@@ -89,8 +97,8 @@ func handleConnection(conn net.Conn) {
 				
 				// add timestamp to message? in unix timestamp form?
 				// need to send to all users
-				msg := "2:100:sdfjklsdnsdljknfdklsdn"
-				conn.Write([]byte(msg))
+				//msg := "2:100:sdfjklsdnsdljknfdklsdn"
+				conn.Write([]byte(msgString))
 				
 			case Goodbye:
 				fmt.Println("someone is leaving! :(")
