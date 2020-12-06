@@ -92,10 +92,10 @@ void ChatArea::receiveMessage(){
     qDebug() << "ChatArea: read " + QString::number(numBytesRead) + " bytes!";
     QString msg(recvbuf);
     msg = msg.trimmed();
-    qDebug() << "ChatArea: received a message:" << msg;
+    qDebug() << "ChatArea: received message:" << msg;
 
     // check first byte to know the length of the message and see if we need more bytes
-    if((int)recvbuf[0] != msg.length() - 1){
+    if((int)recvbuf[0] < msg.length() - 1){
         qDebug() << "got an incomplete message from the server! need to read more bytes.";
         // TODO: read more bytes if needed
     }

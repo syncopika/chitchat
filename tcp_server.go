@@ -73,6 +73,7 @@ func handleConnection(conn net.Conn) {
 		
 		msgString := string(messageBuffer)
 		fmt.Println("the message: " + msgString)
+		fmt.Printf("message length: %d\n", len(msgString))
 		
 		// evaluate
 		firstByte, err := strconv.Atoi(string(msgString[0])) // get int from ascii so we can compare with enum
@@ -97,7 +98,7 @@ func handleConnection(conn net.Conn) {
 					msg := "hello there " + username + "!"
 					msg = strconv.Itoa(Message) + ":" + strconv.Itoa(len(msg)) + ":" + msg
 					
-					sendMessage(msg, conn) //conn.Write([]byte(msgString))
+					sendMessage(msg, conn)
 					
 					// new user has joined. need to let everyone know
 				}
@@ -106,7 +107,7 @@ func handleConnection(conn net.Conn) {
 				
 				// add timestamp to message? in unix timestamp form?
 				// need to send to all users
-				sendMessage(msgString, conn)// conn.Write([]byte(msgString))
+				sendMessage(msgString, conn)
 				
 			case Goodbye:
 				fmt.Println("someone is leaving! :(")
