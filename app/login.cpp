@@ -49,6 +49,8 @@ void Login::sendGreeting(){
 void Login::go()
 {
     if(userdata == nullptr){
+        // do this because if user disconnects, they'll come back to this page
+        // and userdata should already exist
         userdata = new UserData();
     }
 
@@ -73,7 +75,7 @@ void Login::connectedToServer()
     ui->progressBar->setValue(75);
 
     // collect avatar image + user info
-    userdata->username = username;
+    userdata->username = new QString(username);
 
     // emit signal to send its pointer to mainwindow
     emit sendUserData(userdata);

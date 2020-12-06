@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpSocket>
+#include <QJsonObject>
 #include "userdata.h"
 
 namespace Ui {
@@ -29,18 +30,23 @@ private:
     QTcpSocket* socket;
     QString messageInput;
     UserData* userData;
+    QJsonObject emoticons;
 
     void setUp();
     void tearDown();
+    void setupEmoticons();
     bool sendMessage(QString msg);
 
 private slots:
     void receiveMessage();
     void send();
     void disconnect();
+    void updateEmoticons(const QString&);
+    void getUserData(UserData* data);
+
+    // move these to another widget to handle
     void addEmoticon();
     void removeEmoticon();
-    void getUserData(UserData* data);
 };
 
 #endif // CHATAREA_H

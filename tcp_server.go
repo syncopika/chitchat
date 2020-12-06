@@ -88,7 +88,7 @@ func handleConnection(conn net.Conn) {
 					// write to socket
 					msg := "hello there " + username + "!"
 					msg = strconv.Itoa(Message) + ":" + strconv.Itoa(len(msg)) + ":" + msg
-					conn.Write([]byte(msg))
+					conn.Write([]byte(msgString))
 					
 					// new user has joined. need to let everyone know
 				}
@@ -97,7 +97,6 @@ func handleConnection(conn net.Conn) {
 				
 				// add timestamp to message? in unix timestamp form?
 				// need to send to all users
-				//msg := "2:100:sdfjklsdnsdljknfdklsdn"
 				conn.Write([]byte(msgString))
 				
 			case Goodbye:
@@ -107,8 +106,6 @@ func handleConnection(conn net.Conn) {
 		}
 		
 		// step 2: read in the size of the message
-		
-		
 		// step 3: read in the message
 	}
 

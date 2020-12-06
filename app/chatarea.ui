@@ -42,8 +42,8 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>300</y>
+     <x>340</x>
+     <y>310</y>
      <width>71</width>
      <height>20</height>
     </rect>
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>20</y>
+     <y>40</y>
      <width>111</width>
      <height>101</height>
     </rect>
@@ -70,19 +70,6 @@
      <width>281</width>
      <height>411</height>
     </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_2">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>480</y>
-     <width>91</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>edit emoticons</string>
    </property>
   </widget>
   <widget class="QCommandLinkButton" name="sendMessage">
@@ -102,7 +89,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>320</y>
+     <y>330</y>
      <width>101</width>
      <height>22</height>
     </rect>
@@ -111,8 +98,8 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>510</y>
+     <x>350</x>
+     <y>470</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -121,12 +108,12 @@
     <string>disconnect</string>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="textBrowser_3">
+  <widget class="QTextBrowser" name="emoticonDisplay">
    <property name="geometry">
     <rect>
      <x>330</x>
      <y>360</y>
-     <width>101</width>
+     <width>111</width>
      <height>91</height>
     </rect>
    </property>
@@ -147,8 +134,8 @@
   <widget class="QLabel" name="usernameLabel">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>120</y>
+     <x>330</x>
+     <y>20</y>
      <width>111</width>
      <height>20</height>
     </rect>

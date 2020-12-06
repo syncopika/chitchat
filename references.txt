@@ -2,6 +2,7 @@
 https://code.qt.io/cgit/qt/qtbase.git/tree/examples/network/network-chat?h=5.15
 
 https://www.qtcentre.org/threads/33924-QString-use-c_str()
+https://stackoverflow.com/questions/20288282/how-to-read-complete-data-in-qtcpsocket
 https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 https://www.bogotobogo.com/Qt/Qt5_QTcpSocket_Signals_Slots.php
 https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
@@ -12,11 +13,16 @@ https://stackoverflow.com/questions/14480696/resize-qstackedwidget-to-the-page-w
 https://doc.qt.io/archives/qt-4.8/application-windows.html
 https://forum.qt.io/topic/63701/qwidget-s-children-destruction-mechanism
 
+// qt with json
+https://stackoverflow.com/questions/19822211/qt-parsing-json-using-qjsondocument-qjsonobject-qjsonarray
+https://stackoverflow.com/questions/15893040/how-to-create-read-write-json-files-in-qt5
+https://forum.qt.io/topic/97325/create-qcombobox-model-from-a-json/4
+https://stackoverflow.com/questions/23174393/parse-jsonarray
+
 // golang stuff
 https://gist.github.com/kenshinx/5796276
 https://stackoverflow.com/questions/26999615/go-tcp-read-is-non-blocking
 https://yourbasic.org/golang/gotcha/
-
 
 // misc
 use heob to check for memory leaks

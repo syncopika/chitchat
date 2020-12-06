@@ -5,7 +5,7 @@
 #include <QTcpSocket>
 
 struct UserData {
-    QString username;
+    QString* username;
 };
 
 #endif // USERDATA_H
