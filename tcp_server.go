@@ -1,9 +1,8 @@
 package main
 
 import (
-	//"bufio"
 	"fmt"
-	//"io"
+	"io"
 	"net"
 	"os"
 	"strconv"
@@ -28,6 +27,14 @@ func dissectMessage(msg string) []string {
 	return strings.Split(msg, ":")
 }
 
+func sendMessage(msg string, conn net.Conn) {
+	// get length of msg
+	msgLength := len(msg)
+	
+	// prepend msg with the length of msg so receiver knows how many bytes to read
+	conn.Write([]byte(string(msgLength) + msg))
+}
+
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
 func handleConnection(conn net.Conn) {
 
@@ -42,30 +49,32 @@ func handleConnection(conn net.Conn) {
 	fmt.Printf("got a client!\n");
 	
 	for {
-		//data := bufio.NewReader(conn)
+		// this is to get the message length (which should be one byte)
+		buf := make([]byte, 1)
 		
-		// TODO: is this buffer size ok?
-		buf := make([]byte, 1024)
-		
-		/* step 1: read in the message type
-		if _, err := io.ReadAtLeast(data, buf, 1); err != nil {
-			//fmt.Println("error reading from the stream! could not get message type.")
-			//fmt.Println(err)
-			//break
-			continue
-		}*/
-		
-		numBytesRead, err := conn.Read(buf)
+		// read one byte first to know how many bytes will make up the actual message
+		_, err := io.ReadFull(conn, buf)
 		if err != nil {
+			//fmt.Println("error reading initial byte from socket")
 			continue
 		}
-		msgString := string(buf)
 		
-		fmt.Printf("%d num bytes read.\n", numBytesRead)
+		// make a new buffer for the message
+		numMessageBytes := int(buf[0])
+		
+		fmt.Printf("need to read: %d bytes for the message.\n", numMessageBytes)
+		messageBuffer := make([]byte, numMessageBytes)
+		
+		// read in the message
+		if _, err := io.ReadFull(conn, messageBuffer); err != nil {
+			fmt.Println("error reading message into messageBuffer!")
+			continue
+		}
+		
+		msgString := string(messageBuffer)
 		fmt.Println("the message: " + msgString)
 		
 		// evaluate
-		// TODO: we really need to refactor to ensure we get all the bytes in the message!
 		firstByte, err := strconv.Atoi(string(msgString[0])) // get int from ascii so we can compare with enum
 		if err != nil {
 			fmt.Println("problem reading first byte of buffer!")
@@ -82,13 +91,13 @@ func handleConnection(conn net.Conn) {
 				if len(tokens) != 3 {
 					fmt.Println("message from buffer does not have 3 parts! :(")
 				} else {
-				
 					username := tokens[2]
-				
+					
 					// write to socket
 					msg := "hello there " + username + "!"
 					msg = strconv.Itoa(Message) + ":" + strconv.Itoa(len(msg)) + ":" + msg
-					conn.Write([]byte(msgString))
+					
+					sendMessage(msg, conn) //conn.Write([]byte(msgString))
 					
 					// new user has joined. need to let everyone know
 				}
@@ -97,7 +106,7 @@ func handleConnection(conn net.Conn) {
 				
 				// add timestamp to message? in unix timestamp form?
 				// need to send to all users
-				conn.Write([]byte(msgString))
+				sendMessage(msgString, conn)// conn.Write([]byte(msgString))
 				
 			case Goodbye:
 				fmt.Println("someone is leaving! :(")
@@ -105,8 +114,6 @@ func handleConnection(conn net.Conn) {
 				fmt.Println("got an update for current users!")
 		}
 		
-		// step 2: read in the size of the message
-		// step 3: read in the message
 	}
 
 	// TODO: don't close

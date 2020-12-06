@@ -9,6 +9,7 @@ Login::Login(QWidget *parent, QTcpSocket* socket) :
     ui->setupUi(this);
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(go()));
     this->socket = socket;
+    this->userdata = nullptr;
     setUp();
 }
 
@@ -34,6 +35,14 @@ void Login::sendGreeting(){
 
     QString greeting = msgType + ":" + usernameLength + ":"  + username;
 
+    // send size of msg to expect first
+    const char msgSize = (int)greeting.length();
+
+    qint64 msgSizeBytesWritten = socket->write(&msgSize, 1);
+    if(msgSizeBytesWritten == -1){
+        qDebug() << "there was an error writing to the socket!";
+    }
+
     std::string greet = greeting.toStdString();
     const char* gstring = greet.c_str();
     qDebug() << "going to send:" << gstring;
@@ -42,8 +51,6 @@ void Login::sendGreeting(){
     if(bytesWritten == -1){
         qDebug() << "there was an error writing to the socket!";
     }
-
-    socket->flush();
 }
 
 void Login::go()

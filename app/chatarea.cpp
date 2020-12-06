@@ -94,12 +94,21 @@ void ChatArea::receiveMessage(){
     msg = msg.trimmed();
     qDebug() << "ChatArea: received a message:" << msg;
 
+    // check first byte to know the length of the message and see if we need more bytes
+    if((int)recvbuf[0] != msg.length() - 1){
+        qDebug() << "got an incomplete message from the server! need to read more bytes.";
+        // TODO: read more bytes if needed
+    }
+
+    // remove the first char from the message since that's just supposed to represent
+    // the length of the message
+    msg = msg.remove(0, 1);
+
     // check first char to determine what kind of message it is?
     QStringList tokens = msg.split(":");
     if(tokens.length() == 3){
         // put the msg in the UI
-        ui->chatDisplay->append(tokens[1] + ":" + tokens[2]);
-        socket->flush();
+        ui->chatDisplay->append(tokens[2]);
     }
 }
 
@@ -107,6 +116,10 @@ void ChatArea::send(){
     QString msg = ui->enterMessage->text();
     msg = msg.trimmed();
     msg = "2:" + *(userData->username) + ":" + msg; // this is a bad format. what if the msg has colons??
+
+    // prepend the message with the length of the whole message (including the type) so the server knows
+    // exactly how many bytes to read for the complete message
+    msg = QString(msg.length()) + msg;
 
     if(msg != ""){
         bool msgSent = sendMessage(msg);
@@ -121,7 +134,7 @@ bool ChatArea::sendMessage(QString msg){
     const char* mstring = message.c_str();
     qDebug() << "ChatArea: going to send:" << mstring;
     qint64 bytesWritten = socket->write(mstring, message.length());
-    socket->flush();
+    //socket->flush();
 
     if(bytesWritten == -1){
         qDebug() << "there was an error writing to the socket!";

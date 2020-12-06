@@ -2,10 +2,7 @@
 https://code.qt.io/cgit/qt/qtbase.git/tree/examples/network/network-chat?h=5.15
 
 https://www.qtcentre.org/threads/33924-QString-use-c_str()
-https://stackoverflow.com/questions/20288282/how-to-read-complete-data-in-qtcpsocket
-https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 https://www.bogotobogo.com/Qt/Qt5_QTcpSocket_Signals_Slots.php
-https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
 https://stackoverflow.com/questions/46248797/qt-connect-in-constructor-not-connecting
 https://www.qtcentre.org/threads/68786-Switching-between-two-ui-forms-QMainWindow-screens
 https://stackoverflow.com/questions/23511430/qt-qstackedwidget-resizing-issue/34300567
@@ -23,6 +20,15 @@ https://stackoverflow.com/questions/23174393/parse-jsonarray
 https://gist.github.com/kenshinx/5796276
 https://stackoverflow.com/questions/26999615/go-tcp-read-is-non-blocking
 https://yourbasic.org/golang/gotcha/
+https://mrwaggel.be/post/golang-byte-to-int-example/
+https://stackoverflow.com/questions/11184336/how-to-convert-from-byte-to-int-in-go-programming -> this reminds me - I'm not doing
+any ntohs/l or htons/l stuff. endian is probably important when reading from the socket.
+
+// networking stuff
+https://stackoverflow.com/questions/17916912/reading-from-reader-until-a-string-is-reached
+https://stackoverflow.com/questions/20288282/how-to-read-complete-data-in-qtcpsocket
+https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
+https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
 
 // misc
 use heob to check for memory leaks

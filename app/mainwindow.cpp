@@ -50,7 +50,7 @@ void MainWindow::resize(int index){
 }
 
 void MainWindow::getUserData(UserData* data){
-    qDebug() << "MainWindow: got the userdata in mainwindow! username: " + *(data->username);
+    qDebug() << "MainWindow: got the userdata in mainwindow! username: " << *(data->username);
     userData = data;
 }
 
