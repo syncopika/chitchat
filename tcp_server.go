@@ -28,8 +28,8 @@ func dissectMessage(msg string) []string {
 }
 
 func sendMessage(msg string, conn net.Conn) {
-	// get length of msg
-	msgLength := len(msg)
+	// get length of msg in bytes! (since num of chars in string != num of bytes)
+	msgLength := len([]byte(msg))
 	
 	// prepend msg with the length of msg so receiver knows how many bytes to read
 	conn.Write([]byte(string(msgLength) + msg))

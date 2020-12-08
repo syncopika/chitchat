@@ -117,9 +117,10 @@ void ChatArea::send(){
     msg = msg.trimmed();
     msg = "2:" + *(userData->username) + ":" + msg; // this is a bad format. what if the msg has colons??
 
-    // prepend the message with the length of the whole message (including the type) so the server knows
+    // prepend the message with the length (in bytes) of the whole message (including the type) so the server knows
     // exactly how many bytes to read for the complete message
-    msg = QString(msg.length()) + msg;
+    int msgByteLength = msg.toUtf8().size();
+    msg = QString(msgByteLength) + msg;
 
     if(msg != ""){
         bool msgSent = sendMessage(msg);

@@ -13,7 +13,6 @@ A key feature is being able to have complex ASCII/unicode emoticons on hand and 
     
 ## TODO:    
 - change message parsing i.e. don't split on colons (a lot of emoticons use those lol)
-- also length of string != num bytes to be read (duh) - need to account for that
 - emoticon edit page/widget
 - loading emoticons from a saved json?
 - server needs to send user list/handle multiple users/broadcasting
