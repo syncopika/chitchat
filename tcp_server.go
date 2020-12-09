@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // TODO: update to be same as client
@@ -28,6 +29,7 @@ func dissectMessage(msg string) []string {
 }
 
 func sendMessage(msg string, conn net.Conn) {
+
 	// get length of msg in bytes! (since num of chars in string != num of bytes)
 	msgLength := len([]byte(msg))
 	
@@ -36,7 +38,7 @@ func sendMessage(msg string, conn net.Conn) {
 }
 
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
-func handleConnection(conn net.Conn) {
+func handleConnection(conn net.Conn, clientList *[]ConnectionInfo) {
 
 	// additionally, pass in as an arg the list of client connections
 	// grab the mutex and read from the conn in the for loop below
@@ -93,21 +95,26 @@ func handleConnection(conn net.Conn) {
 					fmt.Println("message from buffer does not have 3 parts! :(")
 				} else {
 					username := tokens[2]
+					timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 					
 					// write to socket
 					msg := "hello there " + username + "!"
-					msg = strconv.Itoa(Message) + ":" + strconv.Itoa(len(msg)) + ":" + msg
+					msg = strconv.Itoa(Message) + ":" + timestamp + "-" + strconv.Itoa(len(msg)) + ":" + msg
 					
 					sendMessage(msg, conn)
 					
 					// new user has joined. need to let everyone know
+					// send diff msg to all conns that aren't this one in clientList?
 				}
 			case Message:
 				fmt.Println("got a regular message to broadcast!")
+				timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 				
-				// add timestamp to message? in unix timestamp form?
-				// need to send to all users
-				sendMessage(msgString, conn)
+				// need to send to all users - Need to acquire a lock first!?
+				for _, connInfo := range *clientList {
+					clientConn := connInfo.connection
+					sendMessage(timestamp + "-" + msgString, clientConn)
+				}
 				
 			case Goodbye:
 				fmt.Println("someone is leaving! :(")
@@ -169,7 +176,7 @@ func main() {
 
 		// use a goroutine to handle new connection
 		// https://stackoverflow.com/questions/26006856/why-use-the-go-keyword-when-calling-a-function
-		go handleConnection(conn)
+		go handleConnection(conn, &clients)
 	}
 
 }
