@@ -143,6 +143,9 @@
    <property name="text">
     <string>username goes here</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources/>

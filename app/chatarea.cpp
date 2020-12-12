@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QDateTime>
 
 ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket) :
     QWidget(parent),
@@ -107,8 +108,21 @@ void ChatArea::receiveMessage(){
     // check first char to determine what kind of message it is?
     QStringList tokens = msg.split(":");
     if(tokens.length() == 3){
+
+        QString msgType = tokens[0];
+
         // put the msg in the UI
-        ui->chatDisplay->append(tokens[2]);
+        // don't forget to take care of the unix timestamp
+        QString theMsg = tokens[2];
+
+        uint timestamp = (uint)tokens[1].toInt(); // format is: msgType:timestamp:msg
+        QDateTime datetime;
+        datetime.setTime_t(timestamp);
+        QString now = datetime.toString(Qt::SystemLocaleShortDate);
+
+        QString actualMsg = now + ":" + theMsg;
+
+        ui->chatDisplay->append(actualMsg);
     }
 }
 

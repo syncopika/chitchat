@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -24,11 +25,21 @@ type ConnectionInfo struct {
 	id         int
 }
 
+type ConnectionList struct {
+	clients []ConnectionInfo
+	mu      sync.Mutex
+}
+
 func dissectMessage(msg string) []string {
 	return strings.Split(msg, ":")
 }
 
-func sendMessage(msg string, conn net.Conn) {
+func sendMessage(msg string, msgType string, conn net.Conn) {
+
+	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+	
+	// write to socket
+	msg = msgType + ":" + timestamp + ": " + msg
 
 	// get length of msg in bytes! (since num of chars in string != num of bytes)
 	msgLength := len([]byte(msg))
@@ -38,14 +49,7 @@ func sendMessage(msg string, conn net.Conn) {
 }
 
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
-func handleConnection(conn net.Conn, clientList *[]ConnectionInfo) {
-
-	// additionally, pass in as an arg the list of client connections
-	// grab the mutex and read from the conn in the for loop below
-	// each iteration check the length of the list. if diff from last iteration,
-	// read all the users and send to client list of users to update UI
-	// but also! when broadcasting new messages, we need to send that to all connections
-	// in the list!
+func handleConnection(conn net.Conn, clientList *ConnectionList) {
 
 	//fmt.Printf("Serving: %s\n", conn.RemoteAddr().String())
 	fmt.Printf("got a client!\n");
@@ -88,6 +92,7 @@ func handleConnection(conn net.Conn, clientList *[]ConnectionInfo) {
 		switch msgType := firstByte
 		msgType {
 			case Hello:
+				// when receiving a new user
 				fmt.Println("got a hello message! :D")
 				
 				tokens := dissectMessage(msgString) // this is not a good protocol
@@ -95,26 +100,36 @@ func handleConnection(conn net.Conn, clientList *[]ConnectionInfo) {
 					fmt.Println("message from buffer does not have 3 parts! :(")
 				} else {
 					username := tokens[2]
-					timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+					msg := username + " has joined the server!"
+					msgType := strconv.Itoa(Message)
 					
-					// write to socket
-					msg := "hello there " + username + "!"
-					msg = strconv.Itoa(Message) + ":" + timestamp + "-" + strconv.Itoa(len(msg)) + ":" + msg
+					clientList.mu.Lock()
+				
+					for _, connInfo := range clientList.clients {
+						clientConn := connInfo.connection
+						sendMessage(msg, msgType, clientConn)
+					}
 					
-					sendMessage(msg, conn)
+					// also send the list of current users online?
 					
-					// new user has joined. need to let everyone know
-					// send diff msg to all conns that aren't this one in clientList?
+					clientList.mu.Unlock()
 				}
 			case Message:
 				fmt.Println("got a regular message to broadcast!")
-				timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 				
-				// need to send to all users - Need to acquire a lock first!?
-				for _, connInfo := range *clientList {
+				// extract the message and reformat it
+				msgParts := dissectMessage(msgString)
+				msg := msgParts[1] + " - " + msgParts[2]
+				msgType := strconv.Itoa(Message)
+				
+				clientList.mu.Lock()
+				
+				for _, connInfo := range clientList.clients {
 					clientConn := connInfo.connection
-					sendMessage(timestamp + "-" + msgString, clientConn)
+					sendMessage(msg, msgType, clientConn)
 				}
+				
+				clientList.mu.Unlock()
 				
 			case Goodbye:
 				fmt.Println("someone is leaving! :(")
@@ -132,7 +147,7 @@ func main() {
 
 	// keep track of connections
 	// need to associate a mutex with this cause multithreads
-	var clients []ConnectionInfo
+	var clientList ConnectionList
 
 	// print out the ip that's hosting?
 	// https://stackoverflow.com/questions/23558425/how-do-i-get-the-local-ip-address-in-go
@@ -167,16 +182,20 @@ func main() {
 		}
 		
 		// add to connected clients list
-		newId := len(clients) + 1
+		newId := len(clientList.clients) + 1
 		newConn := ConnectionInfo{
 			connection: conn,
 			id: newId,
 		}
-		clients = append(clients, newConn) // don't forget to pass pointer to clients to new goroutine
+		
+		// use clientList struct
+		clientList.mu.Lock()
+		clientList.clients = append(clientList.clients, newConn)
+		clientList.mu.Unlock()
 
 		// use a goroutine to handle new connection
 		// https://stackoverflow.com/questions/26006856/why-use-the-go-keyword-when-calling-a-function
-		go handleConnection(conn, &clients)
+		go handleConnection(conn, &clientList)
 	}
 
 }
