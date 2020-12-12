@@ -29,18 +29,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     chatarea.cpp \
-    login.cpp
+    login.cpp \
+    emoticonedit.cpp
 
 HEADERS += \
         mainwindow.h \
     chatarea.h \
     login.h \
-    userdata.h
+    userdata.h \
+    emoticonedit.h
 
 FORMS += \
         mainwindow.ui \
     login.ui \
-    chatarea.ui
+    chatarea.ui \
+    emoticonedit.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

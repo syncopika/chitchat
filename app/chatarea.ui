@@ -51,6 +51,9 @@
    <property name="text">
     <string>      emoticons:</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">
@@ -129,6 +132,9 @@
    </property>
    <property name="text">
     <string>users online:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="usernameLabel">

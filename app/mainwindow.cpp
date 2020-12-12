@@ -2,6 +2,7 @@
 #include "userdata.h"
 #include "ui_mainwindow.h"
 
+#include <QMenuBar>
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -10,17 +11,24 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    isConnected = false;
+
     // set up qwidgets for the windows
     stackedWidget = new QStackedWidget;
     QMainWindow::setCentralWidget(stackedWidget);
+
+    // set up menu bar
+    setUpMenuBar();
 
     userData = nullptr;
     clientSocket = new QTcpSocket();
     loginPage = new Login(nullptr, clientSocket);
     chatArea = new ChatArea(nullptr, clientSocket);
+    emoticonEdit = new EmoticonEdit(nullptr);
 
     stackedWidget->addWidget(loginPage);
     stackedWidget->addWidget(chatArea);
+    stackedWidget->addWidget(emoticonEdit);
     stackedWidget->setCurrentWidget(loginPage);
 
     // receive signal from the login page to move to chat area
@@ -35,8 +43,14 @@ void MainWindow::goToLogin(){
 }
 
 void MainWindow::goToChat(){
+    // user is connected
+    isConnected = true;
+
     // change the page
     stackedWidget->setCurrentWidget(chatArea);
+
+    // adjust menu bar items' active state
+    // i.e. 'go to previous page' should be greyed out when on the chat page
 
     // give chatArea userdata info
     emit giveUserData(userData);
@@ -52,6 +66,51 @@ void MainWindow::resize(int index){
 void MainWindow::getUserData(UserData* data){
     qDebug() << "MainWindow: got the userdata in mainwindow! username: " << *(data->username);
     userData = data;
+}
+
+void MainWindow::setUpMenuBar(){
+
+    // set up actions
+    editEmoticonsAct = new QAction(tr("&edit emoticons"), this);
+    goBackAct = new QAction(tr("&back to previous page"), this);
+    disconnectAct = new QAction(tr("&disconnect from server"), this);
+
+    connect(editEmoticonsAct, &QAction::triggered, this, &MainWindow::goToEditEmoticons);
+    connect(goBackAct, &QAction::triggered, this, &MainWindow::goBackToPrevPage);
+    connect(disconnectAct, &QAction::triggered, this, &MainWindow::disconnectFromServer);
+
+    // set up menu
+    optionMenu = new QMenu(tr("&options"), this);
+    optionMenu->addAction(editEmoticonsAct);
+    optionMenu->addAction(goBackAct);
+    optionMenu->addAction(disconnectAct);
+
+    // on login page, 'go back' and 'disconnect' should be greyed out
+    goBackAct->setEnabled(false);
+    disconnectAct->setEnabled(false);
+
+    menuBar()->addMenu(optionMenu);
+}
+
+// slots for handling menu bar actions
+void MainWindow::goToEditEmoticons(){
+    // make sure goBackToPrevPage is enabled
+    goBackAct->setEnabled(true);
+    stackedWidget->setCurrentWidget(emoticonEdit);
+}
+
+void MainWindow::goBackToPrevPage(){
+    // set current page to either the login if not connected yet,
+    // or to the chat area if connected
+    if(stackedWidget->currentIndex() == 2 && !isConnected){
+        // if we're currently on the edit emoticons page and we're not connected
+        // to a server, go back to login page
+        stackedWidget->setCurrentWidget(loginPage);
+    }
+}
+
+void MainWindow::disconnectFromServer(){
+    // disconnect from the server
 }
 
 MainWindow::~MainWindow()
