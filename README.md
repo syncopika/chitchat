@@ -13,10 +13,8 @@ A key feature is being able to have complex ASCII/unicode emoticons on hand and 
     
 ## TODO:    
 - change message parsing i.e. don't split on colons (a lot of emoticons use those lol)
-- emoticon edit page/widget
+- make emoticon edit page/widget functional
+- implement disconnect
 - loading emoticons from a saved json?
-- server needs to send user list/handle multiple users/broadcasting
-- messages from server should come with timestamp
-- implement disconnect button in chat area page
 - testing with multiple users
 - implement avatar feature

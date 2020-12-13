@@ -15,7 +15,7 @@ class ChatArea : public QWidget
     Q_OBJECT
 
 public:
-    explicit ChatArea(QWidget *parent = nullptr, QTcpSocket* socket = nullptr);
+    explicit ChatArea(QWidget *parent = nullptr, QTcpSocket* socket = nullptr, QJsonObject* emoticonData = nullptr);
     ~ChatArea();
 
     enum MessageType {
@@ -30,7 +30,7 @@ private:
     QTcpSocket* socket;
     QString messageInput;
     UserData* userData;
-    QJsonObject emoticons;
+    QJsonObject* emoticonData;
 
     void setUp();
     void tearDown();

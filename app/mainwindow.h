@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QStackedWidget>
+#include <QJsonObject>
 #include <QAction>
 #include <QMenu>
 
@@ -49,6 +50,7 @@ private:
 
     QTcpSocket* clientSocket;
     UserData* userData;
+    QJsonObject* emoticonData;
 
     QMenu* optionMenu;
     QAction* editEmoticonsAct;
@@ -58,6 +60,7 @@ private:
     bool isConnected; // if is connected to chat server
 
     void setUpMenuBar();
+    void setUpEmoticons();
 };
 
 #endif // MAINWINDOW_H

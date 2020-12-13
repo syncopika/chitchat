@@ -98,19 +98,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>470</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>disconnect</string>
-   </property>
-  </widget>
   <widget class="QTextBrowser" name="emoticonDisplay">
    <property name="geometry">
     <rect>

@@ -119,6 +119,7 @@ void Login::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
         ui->progressBar->setValue(50);
     }else{
         qDebug() << "Login: failed to connect to server :(";
+        ui->progressBar->setValue(0);
     }
 }
 

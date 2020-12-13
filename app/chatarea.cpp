@@ -7,12 +7,13 @@
 #include <QJsonValue>
 #include <QDateTime>
 
-ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket) :
+ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket, QJsonObject* emoticonData) :
     QWidget(parent),
     ui(new Ui::ChatArea)
 {
     ui->setupUi(this);
     this->socket = socket;
+    this->emoticonData = emoticonData;
 
     setUp();
     setupEmoticons();
@@ -33,36 +34,9 @@ void ChatArea::tearDown(){
     QObject::disconnect(ui->comboBox, SIGNAL(currentTextChanged(const QString&)), this, SLOT(updateEmoticons(const QString&)));
 }
 
+
 void ChatArea::setupEmoticons(){
-    // load in emoticons
-    // TODO: check for a local json as well?
-    // TODO: and also allow editing/addition/removal of emoticons
-    // on a separate page/widget?
-    QString defaultEmoticons(
-       "{"
-       "  \"happy\": ["
-       "      \":D\", "
-       "      \":)\", "
-       "      \"^_^\" "
-       "   ],"
-       "  \"sad\": ["
-       "      \":(\", "
-       "      \":<\" "
-       "   ],"
-       "  \"angry\": ["
-       "      \">:|\", "
-       "      \"（　ﾟДﾟ）\", "
-       "      \"(╯°□°)╯︵ ┻━┻\" "
-       "   ],"
-       "  \"funny\": ["
-       "      \"¯\\_(ツ)_/¯\", "
-       "      \"ʕ•ᴥ•ʔ\" "
-       "   ]"
-       "}"
-    );
-    QByteArray emoticonData = defaultEmoticons.toUtf8();
-    QJsonDocument jsonDoc(QJsonDocument::fromJson(emoticonData));
-    emoticons = jsonDoc.object();
+    QJsonObject emoticons = *emoticonData; //jsonDoc.object();
 
     // set up combo box with emoticons
     QComboBox* dropdown = ui->comboBox;
@@ -75,8 +49,9 @@ void ChatArea::setupEmoticons(){
     updateEmoticons(selected);
 }
 
+
 void ChatArea::updateEmoticons(const QString& emoticonCategory){
-    QJsonArray selectedEmoticons = emoticons.value(emoticonCategory).toArray();
+    QJsonArray selectedEmoticons = emoticonData->value(emoticonCategory).toArray();
 
     ui->emoticonDisplay->clear();
 

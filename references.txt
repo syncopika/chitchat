@@ -10,6 +10,7 @@ https://stackoverflow.com/questions/14480696/resize-qstackedwidget-to-the-page-w
 https://doc.qt.io/archives/qt-4.8/application-windows.html
 https://forum.qt.io/topic/63701/qwidget-s-children-destruction-mechanism
 https://stackoverflow.com/questions/18257864/get-qstring-length-in-bytes-not-characters
+https://stackoverflow.com/questions/13559990/how-to-append-text-to-qplaintextedit-without-adding-newline-and-keep-scroll-at
 
 // qt with json
 https://stackoverflow.com/questions/19822211/qt-parsing-json-using-qjsondocument-qjsonobject-qjsonarray

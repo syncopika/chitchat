@@ -2,6 +2,10 @@
 #include "userdata.h"
 #include "ui_mainwindow.h"
 
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonValue>
+
 #include <QMenuBar>
 #include <QtDebug>
 
@@ -12,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     isConnected = false;
+    userData = nullptr;
+    clientSocket = nullptr;
+    emoticonData = nullptr;
 
     // set up qwidgets for the windows
     stackedWidget = new QStackedWidget;
@@ -20,11 +27,14 @@ MainWindow::MainWindow(QWidget *parent) :
     // set up menu bar
     setUpMenuBar();
 
-    userData = nullptr;
+    // set up emoticon stuff
+    setUpEmoticons();
+
     clientSocket = new QTcpSocket();
+
     loginPage = new Login(nullptr, clientSocket);
-    chatArea = new ChatArea(nullptr, clientSocket);
-    emoticonEdit = new EmoticonEdit(nullptr);
+    chatArea = new ChatArea(nullptr, clientSocket, emoticonData);
+    emoticonEdit = new EmoticonEdit(nullptr, emoticonData);
 
     stackedWidget->addWidget(loginPage);
     stackedWidget->addWidget(chatArea);
@@ -92,6 +102,35 @@ void MainWindow::setUpMenuBar(){
     menuBar()->addMenu(optionMenu);
 }
 
+void MainWindow::setUpEmoticons(){
+    // TODO: check for a local json as well?
+    QString defaultEmoticons(
+       "{"
+       "  \"happy\": ["
+       "      \":D\", "
+       "      \":)\", "
+       "      \"^_^\" "
+       "   ],"
+       "  \"sad\": ["
+       "      \":(\", "
+       "      \":<\" "
+       "   ],"
+       "  \"angry\": ["
+       "      \">:|\", "
+       "      \"（　ﾟДﾟ）\", "
+       "      \"(╯°□°)╯︵ ┻━┻\" "
+       "   ],"
+       "  \"funny\": ["
+       "      \"¯\\_(ツ)_/¯\", "
+       "      \"ʕ•ᴥ•ʔ\" "
+       "   ]"
+       "}"
+    );
+    QByteArray emoticonData = defaultEmoticons.toUtf8();
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(emoticonData));
+    this->emoticonData = new QJsonObject(jsonDoc.object()); // allocate a new object with the same data
+}
+
 // slots for handling menu bar actions
 void MainWindow::goToEditEmoticons(){
     // make sure goBackToPrevPage is enabled
@@ -106,6 +145,8 @@ void MainWindow::goBackToPrevPage(){
         // if we're currently on the edit emoticons page and we're not connected
         // to a server, go back to login page
         stackedWidget->setCurrentWidget(loginPage);
+    }else if(stackedWidget->currentIndex() == 2 && isConnected){
+        stackedWidget->setCurrentWidget(chatArea);
     }
 }
 
@@ -116,6 +157,7 @@ void MainWindow::disconnectFromServer(){
 MainWindow::~MainWindow()
 {
     delete clientSocket;
+    delete emoticonData;
     delete stackedWidget;
     delete userData;
     delete ui;
