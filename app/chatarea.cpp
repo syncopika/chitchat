@@ -17,15 +17,11 @@ ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket, QJsonObject* emoticonDat
 
     setUp();
     setupEmoticons();
-
-    while(true){
-
-    }
 }
 
 // have a signal from mainwindow to do setup? like when the page changes
 void ChatArea::setUp(){
-    QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()), Qt::QueuedConnection);
+    QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
     QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(disconnect()));
     QObject::connect(ui->sendMessage, SIGNAL(clicked()), this, SLOT(send()));
     QObject::connect(ui->comboBox, SIGNAL(currentTextChanged(const QString&)), this, SLOT(updateEmoticons(const QString&)));
