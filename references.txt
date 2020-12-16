@@ -11,6 +11,7 @@ https://doc.qt.io/archives/qt-4.8/application-windows.html
 https://forum.qt.io/topic/63701/qwidget-s-children-destruction-mechanism
 https://stackoverflow.com/questions/18257864/get-qstring-length-in-bytes-not-characters
 https://stackoverflow.com/questions/13559990/how-to-append-text-to-qplaintextedit-without-adding-newline-and-keep-scroll-at
+https://forum.qt.io/topic/9939/solved-question-about-qiodevice-readyread-signal/7
 
 // qt with json
 https://stackoverflow.com/questions/19822211/qt-parsing-json-using-qjsondocument-qjsonobject-qjsonarray
@@ -34,3 +35,14 @@ https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-
 
 // misc
 use heob to check for memory leaks
+
+
+// notes
+problem: after I get a hello msg from a client, I want to send back a greeting AND a list of currently connected client usernames.
+currently I attempt to do this in 2 separate messages. The problem is the first msg gets read due to the receiveMessage slot on the
+client side but the 2nd message is still in the socket and there doesn't seem to be a way for the 2nd corresponding signal to wait
+until the first one is done? so I was hoping the 2 signals would trigger the slot sequentially but I think the 2nd signal gets 'eaten'
+when the first one is being processed. :( 
+
+possible alternative solution: send greeting msg + client info in one socket write.
+possible alt soln 2: forget the signal and slot for receiving and use a while loop in a separate thread?

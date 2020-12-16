@@ -17,11 +17,15 @@ ChatArea::ChatArea(QWidget *parent, QTcpSocket* socket, QJsonObject* emoticonDat
 
     setUp();
     setupEmoticons();
+
+    while(true){
+
+    }
 }
 
 // have a signal from mainwindow to do setup? like when the page changes
 void ChatArea::setUp(){
-    QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+    QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(receiveMessage()), Qt::QueuedConnection);
     QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(disconnect()));
     QObject::connect(ui->sendMessage, SIGNAL(clicked()), this, SLOT(send()));
     QObject::connect(ui->comboBox, SIGNAL(currentTextChanged(const QString&)), this, SLOT(updateEmoticons(const QString&)));
@@ -62,23 +66,27 @@ void ChatArea::updateEmoticons(const QString& emoticonCategory){
 }
 
 void ChatArea::receiveMessage(){
-    // read from socket
-    char recvbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
-    qint64 numBytesRead = socket->read(recvbuf, 1024);
+    // read 1 byte from socket first to know how many to read for the message
+    char recvbuf[1] = {0};
+    qint64 numBytesRead = socket->read(recvbuf, 1);
     qDebug() << "ChatArea: read " + QString::number(numBytesRead) + " bytes!";
-    QString msg(recvbuf);
-    msg = msg.trimmed();
+
+    qint64 msgLengthInBytes = (qint64)recvbuf[0];
+
+    qDebug() << "Message length to expect: " << QString::number(msgLengthInBytes) + " bytes.";
+    char msgbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
+
+    // read in message
+    qint64 msgBytesRead = socket->read(msgbuf, msgLengthInBytes);
+
+    QString msg = QString(msgbuf);
     qDebug() << "ChatArea: received message:" << msg;
 
-    // check first byte to know the length of the message and see if we need more bytes
-    if((int)recvbuf[0] < msg.length() - 1){
+    // check to see if we need to read more bytes
+    if(msgBytesRead < msgLengthInBytes){
         qDebug() << "got an incomplete message from the server! need to read more bytes.";
         // TODO: read more bytes if needed
     }
-
-    // remove the first char from the message since that's just supposed to represent
-    // the length of the message
-    msg = msg.remove(0, 1);
 
     // check first char to determine what kind of message it is?
     QStringList tokens = msg.split(":");
@@ -86,18 +94,27 @@ void ChatArea::receiveMessage(){
 
         QString msgType = tokens[0];
 
-        // put the msg in the UI
-        // don't forget to take care of the unix timestamp
-        QString theMsg = tokens[2];
+        if(msgType.toInt() == (int)MessageType::Message){
+            // regular message
+            QString theMsg = tokens[2];
 
-        uint timestamp = (uint)tokens[1].toInt(); // format is: msgType:timestamp:msg
-        QDateTime datetime;
-        datetime.setTime_t(timestamp);
-        QString now = datetime.toString(Qt::SystemLocaleShortDate);
+            uint timestamp = (uint)tokens[1].toInt(); // format is: msgType:timestamp:msg
+            QDateTime datetime;
+            datetime.setTime_t(timestamp);
+            QString now = datetime.toString(Qt::SystemLocaleShortDate);
 
-        QString actualMsg = now + ":" + theMsg;
+            QString actualMsg = now + ":" + theMsg;
 
-        ui->chatDisplay->append(actualMsg);
+            ui->chatDisplay->append(actualMsg);
+        }else if(msgType.toInt() == (int)MessageType::CurrentUsers){
+            // post current users on
+            qDebug() << "got list of users: " << tokens[2];
+            QStringList users = tokens[2].split(";");
+            ui->usersOnlineDisplay->clear();
+            for(QString user : users){
+                ui->usersOnlineDisplay->append(user.trimmed());
+            }
+        }
     }
 }
 

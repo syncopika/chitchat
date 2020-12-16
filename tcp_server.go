@@ -23,6 +23,7 @@ const (
 type ConnectionInfo struct {
 	connection net.Conn
 	id         int
+	username   string
 }
 
 type ConnectionList struct {
@@ -49,7 +50,7 @@ func sendMessage(msg string, msgType string, conn net.Conn) {
 }
 
 // https://opensource.com/article/18/5/building-concurrent-tcp-server-go
-func handleConnection(conn net.Conn, clientList *ConnectionList) {
+func handleConnection(conn net.Conn, clientId int, clientList *ConnectionList) {
 
 	//fmt.Printf("Serving: %s\n", conn.RemoteAddr().String())
 	fmt.Printf("got a client!\n");
@@ -103,14 +104,35 @@ func handleConnection(conn net.Conn, clientList *ConnectionList) {
 					msg := username + " has joined the server!"
 					msgType := strconv.Itoa(Message)
 					
+					fmt.Println("Going to broadcast: " + msg)
+					
 					clientList.mu.Lock()
 				
+					currentClientNames := []string{username}
+					
 					for _, connInfo := range clientList.clients {
+						// tell all connected clients who joined the server (including this client)
+						
 						clientConn := connInfo.connection
 						sendMessage(msg, msgType, clientConn)
+						
+						// make sure to update username in this client's connInfo
+						if connInfo.id == clientId {
+							connInfo.username = username
+						} else {
+							currentClientNames = append(currentClientNames, connInfo.username)
+						}
 					}
 					
-					// also send the list of current users online?
+					// also send the list of current users online
+					listOfClientNames := strings.Join(currentClientNames[:], ";")
+					fmt.Println("Going to broadcast: " + listOfClientNames)
+					
+					for _, connInfo := range clientList.clients {
+						conn := connInfo.connection
+						msgType = strconv.Itoa(CurrentUsers)
+						sendMessage(listOfClientNames, msgType, conn)
+					}
 					
 					clientList.mu.Unlock()
 				}
@@ -186,6 +208,7 @@ func main() {
 		newConn := ConnectionInfo{
 			connection: conn,
 			id: newId,
+			username: "",
 		}
 		
 		// use clientList struct
@@ -195,7 +218,7 @@ func main() {
 
 		// use a goroutine to handle new connection
 		// https://stackoverflow.com/questions/26006856/why-use-the-go-keyword-when-calling-a-function
-		go handleConnection(conn, &clientList)
+		go handleConnection(conn, newId, &clientList)
 	}
 
 }

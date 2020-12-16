@@ -65,10 +65,8 @@ void Login::go()
     ipAddr   = ui->lineEdit_2->text();
     port     = ui->lineEdit_3->text();
 
-    //qDebug() << "the username is: " << username;
-    //qDebug() << "the ip addr is: " << ipAddr;
-    //qDebug() << "the port is: " << port;
-    //qDebug() << "-------------";
+    // TODO: validate username. make sure absence of certain characters like ; or : maybe?
+
     ui->progressBar->setValue(25);
 
     connectToServer(ipAddr, port.toUShort(), &(*socket));
