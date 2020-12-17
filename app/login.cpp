@@ -28,7 +28,7 @@ void Login::sendGreeting(){
     QString username = this->username;
 
     QString msgType;
-    msgType.setNum((int)MessageType::Hello);
+    msgType.setNum(int(MessageType::Hello));
 
     QString usernameLength;
     usernameLength.setNum(username.length());

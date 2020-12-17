@@ -106,17 +106,13 @@ func handleConnection(conn net.Conn, clientId int, clientList *ConnectionList) {
 					
 					fmt.Println("Going to broadcast: " + msg)
 					
+					// grab lock
 					clientList.mu.Lock()
 				
 					currentClientNames := []string{username}
 					
 					for _, connInfo := range clientList.clients {
-						// tell all connected clients who joined the server (including this client)
-						
-						clientConn := connInfo.connection
-						sendMessage(msg, msgType, clientConn)
-						
-						// make sure to update username in this client's connInfo
+						// get all connected clients' usernames
 						if connInfo.id == clientId {
 							connInfo.username = username
 						} else {
@@ -126,14 +122,18 @@ func handleConnection(conn net.Conn, clientId int, clientList *ConnectionList) {
 					
 					// also send the list of current users online
 					listOfClientNames := strings.Join(currentClientNames[:], ";")
-					fmt.Println("Going to broadcast: " + listOfClientNames)
 					
 					for _, connInfo := range clientList.clients {
+						// tell all connected clients who joined the server (including this client)
+						// and include list of all current clients
 						conn := connInfo.connection
 						msgType = strconv.Itoa(CurrentUsers)
-						sendMessage(listOfClientNames, msgType, conn)
+						
+						// send new client msg + client names separated by ;
+						sendMessage(msg + ";" + listOfClientNames, msgType, conn)
 					}
 					
+					// let go of lock
 					clientList.mu.Unlock()
 				}
 			case Message:

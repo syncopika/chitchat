@@ -46,3 +46,5 @@ when the first one is being processed. :(
 
 possible alternative solution: send greeting msg + client info in one socket write.
 possible alt soln 2: forget the signal and slot for receiving and use a while loop in a separate thread?
+
+use json for messages?

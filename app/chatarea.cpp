@@ -67,7 +67,7 @@ void ChatArea::receiveMessage(){
     qint64 numBytesRead = socket->read(recvbuf, 1);
     qDebug() << "ChatArea: read " + QString::number(numBytesRead) + " bytes!";
 
-    qint64 msgLengthInBytes = (qint64)recvbuf[0];
+    qint64 msgLengthInBytes = qint64(recvbuf[0]);
 
     qDebug() << "Message length to expect: " << QString::number(msgLengthInBytes) + " bytes.";
     char msgbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
@@ -90,28 +90,39 @@ void ChatArea::receiveMessage(){
 
         QString msgType = tokens[0];
 
-        if(msgType.toInt() == (int)MessageType::Message){
+        if(msgType.toInt() == int(MessageType::Message)){
             // regular message
             QString theMsg = tokens[2];
 
-            uint timestamp = (uint)tokens[1].toInt(); // format is: msgType:timestamp:msg
             QDateTime datetime;
+            uint timestamp = uint(tokens[1].toInt()); // format is: msgType:timestamp:msg
             datetime.setTime_t(timestamp);
             QString now = datetime.toString(Qt::SystemLocaleShortDate);
 
             QString actualMsg = now + ":" + theMsg;
 
             ui->chatDisplay->append(actualMsg);
-        }else if(msgType.toInt() == (int)MessageType::CurrentUsers){
-            // post current users on
-            qDebug() << "got list of users: " << tokens[2];
-            QStringList users = tokens[2].split(";");
+
+        }else if(msgType.toInt() == int(MessageType::CurrentUsers)){
+            // in this case we're expecting a msg telling about a new client who joined
+            // and a list of all currently connected users (in the same message)
+            // the msg and the list of users will be separated by a semicolon for now
+
+            qDebug() << "msg: " << tokens[2];
+            QStringList msgTokens = tokens[2].split(";");
+
+            QString newClientMsg = msgTokens[0];
+            ui->chatDisplay->append(newClientMsg);
+
             ui->usersOnlineDisplay->clear();
-            for(QString user : users){
-                ui->usersOnlineDisplay->append(user.trimmed());
+
+            for(int i = 1; i < msgTokens.length(); i++){
+                QString clientName = msgTokens[i];
+                ui->usersOnlineDisplay->append(clientName.trimmed());
             }
         }
     }
+
 }
 
 void ChatArea::send(){
