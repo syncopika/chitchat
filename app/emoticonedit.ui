@@ -52,16 +52,6 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="categoryDisplay">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>60</y>
-     <width>111</width>
-     <height>191</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QTextBrowser" name="emoticonDisplay">
    <property name="geometry">
     <rect>
@@ -177,6 +167,16 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="emoticonCategories">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>60</y>
+     <width>91</width>
+     <height>22</height>
+    </rect>
    </property>
   </widget>
  </widget>

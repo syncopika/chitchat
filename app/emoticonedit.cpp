@@ -9,24 +9,31 @@ EmoticonEdit::EmoticonEdit(QWidget *parent, QJsonObject* emoticonData) :
 {
     ui->setupUi(this);
 
+    setUp();
+
     this->emoticonData = emoticonData;
     setupEmoticons();
 }
 
+void EmoticonEdit::setUp(){
+    QObject::connect(ui->emoticonCategories, SIGNAL(currentTextChanged(const QString&)), this, SLOT(updateEmoticons(const QString&)));
+}
+
+void EmoticonEdit::tearDown(){
+    QObject::disconnect(ui->emoticonCategories, SIGNAL(currentTextChanged(const QString&)), this, SLOT(updateEmoticons(const QString&)));
+}
 
 void EmoticonEdit::setupEmoticons(){
 
     // set up combo box with emoticons
-    QTextBrowser* categoryDisplay = ui->categoryDisplay;
+    QComboBox* dropdown = ui->emoticonCategories;
     foreach(const QString& key, emoticonData->keys()){
-        categoryDisplay->append(key);
-        categoryDisplay->moveCursor(QTextCursor::End);
+        dropdown->addItem(key);
     }
 
-    // show the current emoticons for the selected key (first category)
-    // also highlight the first category (i.e. blue background?)
-    QString firstCategory = emoticonData->keys()[0];
-    updateEmoticons(firstCategory);
+    // show the current emoticons for the selected key
+    QString selected = dropdown->currentText();
+    updateEmoticons(selected);
 }
 
 

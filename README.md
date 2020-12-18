@@ -9,6 +9,10 @@ current look:
     
 ![the chat page](screenshots/chatArea.png)    
     
+![the emoticon edit page](screenshots/emoticonEditPage.png)    
+    
+![the go server](screenshots/go-server.png)    
+    
 A key feature is being able to have complex ASCII/unicode emoticons on hand and ready for use! for when emojis just aren't good enough :)    
     
 ## TODO:    
