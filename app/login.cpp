@@ -36,7 +36,7 @@ void Login::sendGreeting(){
     QString greeting = msgType + ":" + usernameLength + ":"  + username;
 
     // send size of msg to expect first
-    const char msgSize = (int)greeting.length();
+    const char msgSize = int(greeting.length());
 
     qint64 msgSizeBytesWritten = socket->write(&msgSize, 1);
     if(msgSizeBytesWritten == -1){

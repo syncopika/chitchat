@@ -25,7 +25,8 @@ private:
     void setupEmoticons();
 
 private slots:
-    void updateEmoticons(const QString& emoticonCategory);
+    void updateEmoticonDisplay(const QString& emoticonCategory);
+    void addNewEmoticon();
 };
 
 #endif // EMOTICONEDIT_H

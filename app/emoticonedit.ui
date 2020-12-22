@@ -94,7 +94,7 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="addEmoticon">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -107,7 +107,7 @@
     <string>add</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="addCategoryEdit">
    <property name="geometry">
     <rect>
      <x>180</x>
@@ -117,7 +117,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="addEmoticonEdit">
    <property name="geometry">
     <rect>
      <x>180</x>
