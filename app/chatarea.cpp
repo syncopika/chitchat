@@ -140,7 +140,7 @@ void ChatArea::send(){
 bool ChatArea::sendMessage(QString msg){
     QJsonObject regularMsg;
     regularMsg["Msg"] = msg;
-    regularMsg["MsgType"] = QString(MessageType::Message);
+    regularMsg["MsgType"] = "2"; // how can I get MessageType::Message to be a regular int? QString(MessageType::Message) results in "\u0002"
     regularMsg["Sender"] = *userData->username;
     regularMsg["Timestamp"] = ""; // clients don't need to send a timestamp
 
