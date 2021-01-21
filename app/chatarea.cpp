@@ -62,54 +62,69 @@ void ChatArea::updateEmoticons(const QString& emoticonCategory){
 }
 
 void ChatArea::receiveMessage(){
-    // read from socket
-    char recvbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
-    qint64 numBytesRead = socket->read(recvbuf, 1024);
+    // read 1 byte from socket first to know how many to read for the message
+    // a message sent from the server should always be prefaced with the size of the message to expect
+    char recvbuf[1] = {0};
+    qint64 numBytesRead = socket->read(recvbuf, 1);
     qDebug() << "ChatArea: read " + QString::number(numBytesRead) + " bytes!";
-    QString msg(recvbuf);
-    msg = msg.trimmed();
-    qDebug() << "ChatArea: received message:" << msg;
 
-    // check first byte to know the length of the message and see if we need more bytes
-    if((int)recvbuf[0] < msg.length() - 1){
+    qint64 msgLengthInBytes = qint64(recvbuf[0]);
+
+    qDebug() << "Message length to expect: " << QString::number(msgLengthInBytes) + " bytes.";
+    char msgbuf[1024] = {0}; // TODO: make 1024 a typedef? like DEFAULT_BUF_LEN or something
+
+    // read in message
+    qint64 msgBytesRead = socket->read(msgbuf, msgLengthInBytes);
+
+    qDebug() << "ChatArea: received message:" << QString(msgbuf);
+
+    // check to see if we need to read more bytes
+    if(msgBytesRead < msgLengthInBytes){
         qDebug() << "got an incomplete message from the server! need to read more bytes.";
         // TODO: read more bytes if needed
     }
 
-    // remove the first char from the message since that's just supposed to represent
-    // the length of the message
-    msg = msg.remove(0, 1);
+    QByteArray msgBytes = QByteArray(msgbuf);
+    QJsonDocument msgJson = QJsonDocument::fromJson(msgBytes);
+    QJsonObject data = msgJson.object();
+    QString msgType = data["MsgType"].toString();
+    QString msg = data["Msg"].toString();
+    QString sender = data["Sender"].toString();
+    QString timestamp = data["Timestamp"].toString();
 
-    // check first char to determine what kind of message it is?
-    QStringList tokens = msg.split(":");
-    if(tokens.length() == 3){
-
-        QString msgType = tokens[0];
-
-        // put the msg in the UI
-        // don't forget to take care of the unix timestamp
-        QString theMsg = tokens[2];
-
-        uint timestamp = (uint)tokens[1].toInt(); // format is: msgType:timestamp:msg
+    if(msgType.toInt() == int(MessageType::Message)){
+        // regular message
         QDateTime datetime;
-        datetime.setTime_t(timestamp);
+        uint tstamp = uint(timestamp.toInt());
+        datetime.setTime_t(tstamp);
         QString now = datetime.toString(Qt::SystemLocaleShortDate);
 
-        QString actualMsg = now + ":" + theMsg;
+        QString actualMsg = sender + "@" + now + ": " + msg;
 
         ui->chatDisplay->append(actualMsg);
+
+    }else if(msgType.toInt() == int(MessageType::CurrentUsers)){
+        // in this case we're expecting a msg telling about a new client who joined
+        // and a list of all currently connected users (in the same message)
+        // the msg and the list of users will be separated by a semicolon for now
+
+        qDebug() << "msg: " << msg;
+        QStringList msgTokens = msg.split(";");
+
+        QString newClientMsg = msgTokens[0];
+        ui->chatDisplay->append(newClientMsg);
+
+        ui->usersOnlineDisplay->clear();
+
+        for(int i = 1; i < msgTokens.length(); i++){
+            QString clientName = msgTokens[i];
+            ui->usersOnlineDisplay->append(clientName.trimmed());
+        }
     }
 }
 
 void ChatArea::send(){
-    QString msg = ui->enterMessage->text();
-    msg = msg.trimmed();
-    msg = "2:" + *(userData->username) + ":" + msg; // this is a bad format. what if the msg has colons??
-
-    // prepend the message with the length (in bytes) of the whole message (including the type) so the server knows
-    // exactly how many bytes to read for the complete message
-    int msgByteLength = msg.toUtf8().size();
-    msg = QString(msgByteLength) + msg;
+    QString msg = ui->enterMessage->text().trimmed();
 
     if(msg != ""){
         bool msgSent = sendMessage(msg);
@@ -117,13 +132,32 @@ void ChatArea::send(){
             qDebug() << "ChatArea: message failed to send! :(";
         }
     }
+
+    // clear input
+    ui->enterMessage->clear();
 }
 
 bool ChatArea::sendMessage(QString msg){
-    std::string message = msg.toStdString();
-    const char* mstring = message.c_str();
-    qDebug() << "ChatArea: going to send:" << mstring;
-    qint64 bytesWritten = socket->write(mstring, message.length());
+    QJsonObject regularMsg;
+    regularMsg["Msg"] = msg;
+    regularMsg["MsgType"] = "2"; // how can I get MessageType::Message to be a regular int? QString(MessageType::Message) results in "\u0002"
+    regularMsg["Sender"] = *userData->username;
+    regularMsg["Timestamp"] = ""; // clients don't need to send a timestamp
+
+    QJsonDocument doc(regularMsg);
+    QByteArray msgBytes = doc.toJson();
+
+    // send size of msg to expect first
+    const char msgSize = int(msgBytes.length());
+
+    qint64 msgSizeBytesWritten = socket->write(&msgSize, 1);
+    if(msgSizeBytesWritten == -1){
+        qDebug() << "there was an error writing to the socket!";
+    }
+
+    qDebug() << "going to send:" << msgBytes;
+
+    qint64 bytesWritten = socket->write(msgBytes, msgBytes.length());
     //socket->flush();
 
     if(bytesWritten == -1){

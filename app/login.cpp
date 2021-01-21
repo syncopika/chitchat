@@ -2,6 +2,9 @@
 #include "userdata.h"
 #include "ui_login.h"
 
+#include <QJsonObject>
+#include <QJsonDocument>
+
 Login::Login(QWidget *parent, QTcpSocket* socket) :
     QWidget(parent),
     ui(new Ui::Login)
@@ -28,26 +31,31 @@ void Login::sendGreeting(){
     QString username = this->username;
 
     QString msgType;
-    msgType.setNum((int)MessageType::Hello);
+    msgType.setNum(int(MessageType::Hello));
 
-    QString usernameLength;
-    usernameLength.setNum(username.length());
+    //QString usernameLength;
+    //usernameLength.setNum(username.length());
 
-    QString greeting = msgType + ":" + usernameLength + ":"  + username;
+    QJsonObject greetingMsg;
+    greetingMsg["Msg"] = "hello from a new client";
+    greetingMsg["MsgType"] = msgType;
+    greetingMsg["Sender"] = username;
+    greetingMsg["Timestamp"] = "";
+
+    QJsonDocument doc(greetingMsg);
+    QByteArray msgBytes = doc.toJson();
 
     // send size of msg to expect first
-    const char msgSize = (int)greeting.length();
+    const char msgSize = int(msgBytes.length());
 
     qint64 msgSizeBytesWritten = socket->write(&msgSize, 1);
     if(msgSizeBytesWritten == -1){
         qDebug() << "there was an error writing to the socket!";
     }
 
-    std::string greet = greeting.toStdString();
-    const char* gstring = greet.c_str();
-    qDebug() << "going to send:" << gstring;
+    qDebug() << "going to send:" << msgBytes;
 
-    qint64 bytesWritten = socket->write(gstring, greeting.length());
+    qint64 bytesWritten = socket->write(msgBytes, msgBytes.length());
     if(bytesWritten == -1){
         qDebug() << "there was an error writing to the socket!";
     }
@@ -65,10 +73,8 @@ void Login::go()
     ipAddr   = ui->lineEdit_2->text();
     port     = ui->lineEdit_3->text();
 
-    //qDebug() << "the username is: " << username;
-    //qDebug() << "the ip addr is: " << ipAddr;
-    //qDebug() << "the port is: " << port;
-    //qDebug() << "-------------";
+    // TODO: validate username. make sure absence of certain characters like ; or : maybe?
+
     ui->progressBar->setValue(25);
 
     connectToServer(ipAddr, port.toUShort(), &(*socket));

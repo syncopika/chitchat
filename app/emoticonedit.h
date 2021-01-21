@@ -20,8 +20,13 @@ private:
     Ui::EmoticonEdit *ui;
     QJsonObject* emoticonData;
 
+    void setUp();
+    void tearDown();
     void setupEmoticons();
-    void updateEmoticons(const QString& emoticonCategory);
+
+private slots:
+    void updateEmoticonDisplay(const QString& emoticonCategory);
+    void addNewEmoticon();
 };
 
 #endif // EMOTICONEDIT_H
