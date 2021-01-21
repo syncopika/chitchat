@@ -1,6 +1,7 @@
 // this looks helpful! and interesting to study:
 https://code.qt.io/cgit/qt/qtbase.git/tree/examples/network/network-chat?h=5.15
 https://doc.qt.io/qt-5/qcborstreamwriter.html
+JSON seems easier to use than CBOR :>
 
 https://www.qtcentre.org/threads/33924-QString-use-c_str()
 https://www.bogotobogo.com/Qt/Qt5_QTcpSocket_Signals_Slots.php
@@ -40,23 +41,6 @@ https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-
 use heob to check for memory leaks
 
 
-// notes
-problem: after I get a hello msg from a client, I want to send back a greeting AND a list of currently connected client usernames.
-currently I attempt to do this in 2 separate messages. The problem is the first msg gets read due to the receiveMessage slot on the
-client side but the 2nd message is still in the socket and there doesn't seem to be a way for the 2nd corresponding signal to wait
-until the first one is done? so I was hoping the 2 signals would trigger the slot sequentially but I think the 2nd signal gets 'eaten'
-when the first one is being processed. :( 
-
-possible alternative solution: send greeting msg + client info in one socket write.
-possible alt soln 2: forget the signal and slot for receiving and use a while loop in a separate thread?
-
-use json for messages? CBOR?
-
-try json, with this schema for messages:
-
-msgStruct := MessageStruct{
-  MsgType: msgType,
-  Msg: msg,
-  Timestamp: timestamp,
-  Sender: ""
-}
+// notes/TODO
+- unicode doesn't look great (i.e. try chinese characters). 
+- improve interface? also the size doesn't stay consistent after switching pages in the chat area
