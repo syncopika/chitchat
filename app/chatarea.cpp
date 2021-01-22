@@ -99,7 +99,7 @@ void ChatArea::receiveMessage(){
         datetime.setTime_t(tstamp);
         QString now = datetime.toString(Qt::SystemLocaleShortDate);
 
-        QString actualMsg = sender + "@" + now + ": " + msg;
+        QString actualMsg = sender + "@" + now + ": " + msg + "\n\n";
 
         ui->chatDisplay->append(actualMsg);
 
