@@ -74,6 +74,12 @@
      <height>411</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Nirmala UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QCommandLinkButton" name="sendMessage">
    <property name="geometry">

@@ -38,6 +38,7 @@ private slots:
 
 public:
     void setUp();
+    void resetProgressBar();
 private:
     Ui::Login* ui;
 

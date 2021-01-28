@@ -3,7 +3,7 @@
 yet another chat application made with Qt (and Go for a demo server!)    
 based off of: https://github.com/syncopika/boringChat       
     
-currently works well with my demo server but need to test multiple clients and test/add some more features.    
+currently 1 client seems works well with my demo server but need to test multiple clients and test/add some more features.    
     
 current look:    
 ![the login page](screenshots/loginPage.png)    
@@ -15,11 +15,10 @@ current look:
 ![the go server](screenshots/go-server.png)    
     
 A key feature is being able to have complex ASCII/unicode emoticons on hand and ready for use! for when emojis just aren't good enough :)    
+I'm also using JSON for messages between the server and client.    
     
 ## TODO:    
 - make emoticon edit page/widget functional
-- implement disconnect
 - loading emoticons from a saved json?
 - testing with multiple users
 - implement avatar feature
-- better appearance/unicode support (i.e. chinese characters)

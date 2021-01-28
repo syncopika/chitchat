@@ -55,6 +55,7 @@ void MainWindow::goToLogin(){
 
     // should we clear user data?
     loginPage->setUp();
+    loginPage->resetProgressBar();
     stackedWidget->setCurrentWidget(loginPage);
 }
 
@@ -127,9 +128,10 @@ void MainWindow::setUpEmoticons(){
        "      \"（　ﾟДﾟ）\", "
        "      \"(╯°□°)╯︵ ┻━┻\" "
        "   ],"
-       "  \"funny\": ["
-       "      \"¯\\\\_(ツ)_/¯\", "
-       "      \"ʕ•ᴥ•ʔ\" "
+       "  \"funny\": [           "
+       "      \"¯\\\\_(ツ)_/¯\",  "
+       "      \"ʕ•ᴥ•ʔ\",         "
+       "      \"( ͡° ͜ʖ ͡°)\"      "
        "   ]"
        "}"
     );

@@ -27,6 +27,10 @@ void Login::tearDown(){
     QObject::disconnect(socket, SIGNAL(disconnected()), this, SLOT(disconnectedFromServer()));;
 }
 
+void Login::resetProgressBar(){
+    ui->progressBar->setValue(0);
+}
+
 void Login::sendGreeting(){
     QString username = this->username;
 
