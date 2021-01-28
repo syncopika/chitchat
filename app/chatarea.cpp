@@ -112,7 +112,7 @@ void ChatArea::receiveMessage(){
         QStringList msgTokens = msg.split(";");
 
         QString newClientMsg = msgTokens[0];
-        ui->chatDisplay->append(newClientMsg);
+        ui->chatDisplay->append(newClientMsg + "\n\n");
 
         ui->usersOnlineDisplay->clear();
 
@@ -174,12 +174,13 @@ void ChatArea::getUserData(UserData* data){
 }
 
 void ChatArea::disconnect(){
+    // mainwindow.cpp is handling socket disconnection currently (via menu bar).
+    // I don't think there's any cleanup we need to do here?
+
     // disconnect from socket
     // return to login page (emit a signal for that?)
     // unhook signal/slots?
     // since we're disconnecting, delete username pointer in userdata
-    delete userData->username;
-    userData->username = nullptr;
 }
 
 void ChatArea::addEmoticon(){

@@ -168,6 +168,30 @@ func handleConnection(conn net.Conn, clientId int, clientList *ConnectionList) {
 
 		case Goodbye:
 			fmt.Println("someone is leaving! :(")
+			
+			clientList.mu.Lock()
+
+			// remove user from list of clients
+			var newClientList []ConnectionInfo;
+			var currClientNames []string;
+			for _, connInfo := range clientList.clients {
+				// get all connected clients' usernames excluding this user since they're leaving
+				if connInfo.id != clientId {
+					newClientList = append(newClientList, connInfo)
+					currClientNames = append(currClientNames, connInfo.username)
+				}
+			}
+			clientList.clients = newClientList
+			fmt.Println("current list of clients: ")
+			fmt.Println(currClientNames)
+			
+			// TODO: tell everyone and update everyone's current users list
+
+			clientList.mu.Unlock()
+			
+			conn.Close() // close connection!
+			break
+			
 		case CurrentUsers:
 			fmt.Println("got an update for current users!")
 

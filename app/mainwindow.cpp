@@ -49,7 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::goToLogin(){
+    isConnected = false;
+    disconnectAct->setEnabled(false);
+    goBackAct->setEnabled(false);
 
+    // should we clear user data?
+    loginPage->setUp();
+    stackedWidget->setCurrentWidget(loginPage);
 }
 
 void MainWindow::goToChat(){
@@ -61,6 +67,7 @@ void MainWindow::goToChat(){
 
     // adjust menu bar items' active state
     // i.e. 'go to previous page' should be greyed out when on the chat page
+    disconnectAct->setEnabled(true);
 
     // give chatArea userdata info
     emit giveUserData(userData);
@@ -152,6 +159,34 @@ void MainWindow::goBackToPrevPage(){
 
 void MainWindow::disconnectFromServer(){
     // disconnect from the server
+    QJsonObject byeMsg;
+    byeMsg["Msg"] = "";
+    byeMsg["MsgType"] = "3"; // 3 == Goodbye
+    byeMsg["Sender"] = *userData->username;
+    byeMsg["Timestamp"] = "";
+
+    QJsonDocument doc(byeMsg);
+    QByteArray msgBytes = doc.toJson();
+
+    // send size of msg to expect first
+    const char msgSize = int(msgBytes.length());
+
+    qint64 msgSizeBytesWritten = clientSocket->write(&msgSize, 1);
+    if(msgSizeBytesWritten == -1){
+        qDebug() << "mainwindow: there was an error writing to the socket!";
+    }
+
+    qint64 bytesWritten = clientSocket->write(msgBytes, msgBytes.length());
+
+    if(bytesWritten == -1){
+        qDebug() << "mainwindow: there was an error writing to the socket!";
+    }
+
+    qDebug() << "disconnecting from host!";
+    clientSocket->disconnectFromHost();
+
+    // return to login page
+    goToLogin();
 }
 
 MainWindow::~MainWindow()

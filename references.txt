@@ -42,5 +42,4 @@ use heob to check for memory leaks
 
 
 // notes/TODO
-- unicode doesn't look great (i.e. try chinese characters). 
 - improve interface? also the size doesn't stay consistent after switching pages in the chat area

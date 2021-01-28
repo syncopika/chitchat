@@ -98,10 +98,14 @@ void Login::connectedToServer()
     ui->progressBar->setValue(100);
 
     // disconnect signals for this page
+    // these connections need to be reestablished when coming back to the page!
     tearDown();
 
     // move to chat area screen
     emit goToChat();
+
+    // reset
+    ui->progressBar->setValue(0);
 }
 
 void Login::disconnectedFromServer()
