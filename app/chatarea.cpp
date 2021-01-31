@@ -36,7 +36,7 @@ void ChatArea::tearDown(){
 
 
 void ChatArea::setupEmoticons(){
-    QJsonObject emoticons = *emoticonData; //jsonDoc.object();
+    QJsonObject emoticons = *emoticonData;
 
     // set up combo box with emoticons
     QComboBox* dropdown = ui->comboBox;

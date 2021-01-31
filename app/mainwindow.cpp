@@ -76,7 +76,7 @@ void MainWindow::goToChat(){
 
 void MainWindow::resize(int index){
     QWidget* currWidget = stackedWidget->widget(index);
-    currWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    currWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     currWidget->adjustSize();
     adjustSize();
 }
