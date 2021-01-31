@@ -126,12 +126,12 @@ func handleConnection(conn net.Conn, clientId int, clientList* ConnectionList) {
 
 			for idx, _ := range clientList.clients {
 				// get all connected clients' usernames
-				connInfo := clientList.clients[idx]
+				connInfo := clientList.clients[idx] // this is still a copy! :<
 				if connInfo.id == clientId {
-					connInfo.username = username
+					clientList.clients[idx].username = username
 				}
-				fmt.Printf("%s,%d\n",connInfo.username,connInfo.id)
-				currentClientNames = append(currentClientNames, connInfo.username)
+				fmt.Printf("%s,%d\n",username,connInfo.id)
+				currentClientNames = append(currentClientNames, clientList.clients[idx].username)
 			}
 
 			// also send the list of current users online
