@@ -30,6 +30,8 @@ https://mrwaggel.be/post/golang-byte-to-int-example/
 https://stackoverflow.com/questions/11184336/how-to-convert-from-byte-to-int-in-go-programming -> this reminds me - I'm not doing
 any ntohs/l or htons/l stuff. endian is probably important when reading from the socket.
 https://stackoverflow.com/questions/24837432/capitals-in-struct-fields
+https://stackoverflow.com/questions/38135518/value-set-on-struct-member-of-an-array-gets-lost-after-function-returns -> range loop gotcha
+https://stackoverflow.com/questions/20185511/range-references-instead-values
 
 // networking stuff
 https://stackoverflow.com/questions/17916912/reading-from-reader-until-a-string-is-reached
@@ -38,8 +40,9 @@ https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
 
 // misc
-use heob to check for memory leaks
+https://forum.qt.io/topic/84045/qt-getting-error-procedure-entry-point-could-not-be-located-in-dynamic-link-library-qt5core-dll/8 -> running exe
 
 
 // notes/TODO
+use heob to check for memory leaks
 - improve interface? also the size doesn't stay consistent after switching pages in the chat area
