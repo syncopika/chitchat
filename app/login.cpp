@@ -18,7 +18,10 @@ Login::Login(QWidget *parent, QTcpSocket* socket) :
     QObject::connect(ui->pushButton2, SIGNAL(clicked()), this, SLOT(importAvatarImage()));
 
     this->socket = socket;
-    this->userdata = nullptr;
+    userdata = nullptr;
+    scene = nullptr;
+    avatar = nullptr;
+
     setUp();
 }
 
@@ -162,11 +165,19 @@ void Login::importAvatarImage(){
         avatar = new QGraphicsPixmapItem(QPixmap::fromImage(image));
         scene->addItem(avatar);
         view->show();
-        view->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+        view->fitInView(scene->sceneRect()); // still seems to leave some whitespace
     }
 }
 
 Login::~Login()
 {
+    // TODO: move this delete if moving these pointers to another widget
+    //qDebug() << scene;
+    //qDebug() << avatar;
+    delete avatar;
+    delete scene; // I think this might also delete this->avatar for us?
+    //qDebug() << scene;
+    //qDebug() << avatar;
+
     delete ui;
 }

@@ -41,8 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     stackedWidget->addWidget(emoticonEdit);
     stackedWidget->setCurrentWidget(loginPage);
 
-    qDebug() << "curr height: " << height() << ", curr width: " << width();
-
     // receive signal from the login page to move to chat area
     connect(loginPage, SIGNAL(sendUserData(UserData*)), this, SLOT(getUserData(UserData*)));
     connect(loginPage, SIGNAL(goToChat()), this, SLOT(goToChat()));
