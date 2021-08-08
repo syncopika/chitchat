@@ -14,6 +14,10 @@ https://forum.qt.io/topic/63701/qwidget-s-children-destruction-mechanism
 https://stackoverflow.com/questions/18257864/get-qstring-length-in-bytes-not-characters
 https://stackoverflow.com/questions/13559990/how-to-append-text-to-qplaintextedit-without-adding-newline-and-keep-scroll-at
 https://forum.qt.io/topic/9939/solved-question-about-qiodevice-readyread-signal/7
+https://stackoverflow.com/questions/9762299/qt-how-to-make-mainwindow-automatically-resize-when-centralwidget-is-resized
+https://stackoverflow.com/questions/7138113/qt-graphics-view-show-image-widget
+https://stackoverflow.com/questions/23583913/overriding-qgraphicsview-paintevent-function-in-qt-designer
+https://stackoverflow.com/questions/17028680/qt5-c-qgraphicsview-images-dont-fit-view-frame
 
 // qt with json
 https://stackoverflow.com/questions/19822211/qt-parsing-json-using-qjsondocument-qjsonobject-qjsonarray
@@ -44,5 +48,9 @@ https://forum.qt.io/topic/84045/qt-getting-error-procedure-entry-point-could-not
 
 
 // notes/TODO
-use heob to check for memory leaks
-- improve interface? also the size doesn't stay consistent after switching pages in the chat area
+use heob to check for memory leaks?
+- improve interface?
+
+- for uploading an avatar:
+  - have some tooltip thing appear on hover over the white square on the login page? maybe use a QLabel?
+  - need QFileDialog, QPixmap

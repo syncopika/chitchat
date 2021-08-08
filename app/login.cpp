@@ -4,13 +4,19 @@
 
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QDir>
 
 Login::Login(QWidget *parent, QTcpSocket* socket) :
     QWidget(parent),
     ui(new Ui::Login)
 {
     ui->setupUi(this);
+
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(go()));
+    QObject::connect(ui->pushButton2, SIGNAL(clicked()), this, SLOT(importAvatarImage()));
+
     this->socket = socket;
     this->userdata = nullptr;
     setUp();
@@ -134,6 +140,29 @@ void Login::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
     }else{
         qDebug() << "Login: failed to connect to server :(";
         ui->progressBar->setValue(0);
+    }
+}
+
+// TODO: figure out how to actually use the image in chat
+// maybe mainwindow should hold the image data and pass that around as needed to wdigets?
+void Login::importAvatarImage(){
+    QString filename = QFileDialog::getOpenFileName(this, "Open Image", QDir::currentPath());
+    if(!filename.isEmpty()){
+        QImage image(filename);
+
+        if(image.isNull()){
+            QMessageBox::information(this, "image view", "there was a problem loading the image");
+            return;
+        }
+
+        QGraphicsView* view = ui->graphicsView;
+        scene = new QGraphicsScene();
+        view->setScene(scene);
+
+        avatar = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+        scene->addItem(avatar);
+        view->show();
+        view->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
     }
 }
 
