@@ -25,6 +25,22 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QLineEdit {
+	border: 1px solid #000;
+}
+
+QPushButton {
+    background-color: #ccc;
+    border-style: outset;
+    border-radius: 10px;
+    border-color: #000;
+}
+
+QPushButton:hover {
+  background-color: #fff;
+}</string>
+  </property>
   <widget class="QLineEdit" name="lineEdit">
    <property name="geometry">
     <rect>
@@ -163,6 +179,9 @@
      <width>75</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>Add Avatar</string>
