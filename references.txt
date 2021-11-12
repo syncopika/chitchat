@@ -26,6 +26,10 @@ https://forum.qt.io/topic/97325/create-qcombobox-model-from-a-json/4
 https://stackoverflow.com/questions/23174393/parse-jsonarray
 https://stackoverflow.com/questions/21345113/how-to-serialize-a-qjsonobject
 
+// qt styling
+https://stackoverflow.com/questions/54160285/how-to-set-background-color-of-qcombobox-button
+https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenubar
+
 // golang stuff
 https://gist.github.com/kenshinx/5796276
 https://stackoverflow.com/questions/26999615/go-tcp-read-is-non-blocking

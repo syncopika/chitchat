@@ -19,6 +19,43 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QLineEdit {
+	border-width: 1px;
+    border-style: outset;
+    border-radius: 4px;
+    border-color: #000;
+    background-color: #fff;
+}
+
+QPushButton {
+    background-color: #ccc;
+    border-style: outset;
+    border-radius: 10px;
+    border-color: #000;
+}
+
+QPushButton:hover {
+    background-color: #fff;
+}
+
+QTextBrowser {
+	border-width: 1px;
+    border-style: outset;
+    border-radius: 4px;
+    border-color: #000;
+    background-color: #fff;
+}
+
+QAbstractItemView {
+	background-color: #fff;
+}
+
+QComboBox {
+	background-color: #fff;
+    selection-background-color: #fff;
+}</string>
+  </property>
   <widget class="QTextBrowser" name="usersOnlineDisplay">
    <property name="geometry">
     <rect>
@@ -33,7 +70,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>440</y>
+     <y>450</y>
      <width>261</width>
      <height>31</height>
     </rect>
@@ -84,14 +121,26 @@
   <widget class="QCommandLinkButton" name="sendMessage">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>430</y>
+     <x>280</x>
+     <y>450</y>
      <width>31</width>
-     <height>41</height>
+     <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
-    <string>CommandLinkButton</string>
+    <string/>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox">

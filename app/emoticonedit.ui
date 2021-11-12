@@ -31,6 +31,44 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QLineEdit {
+	border-width: 1px;
+    border-style: outset;
+    border-radius: 4px;
+    border-color: #000;
+    background-color: #fff;
+}
+
+QPushButton {
+    background-color: #ccc;
+    border-style: outset;
+    border-radius: 10px;
+    border-color: #000;
+}
+
+QPushButton:hover {
+    background-color: #fff;
+}
+
+QTextBrowser {
+	border-width: 1px;
+    border-style: outset;
+    border-radius: 4px;
+    border-color: #000;
+    background-color: #fff;
+}
+
+QAbstractItemView {
+	background-color: #fff;
+}
+
+QComboBox {
+	background-color: #fff;
+    selection-background-color: #fff;
+}
+</string>
+  </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>

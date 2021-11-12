@@ -27,7 +27,15 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QLineEdit {
-	border: 1px solid #000;
+	border-width: 2px;
+    border-style: outset;
+    border-radius: 4px;
+    border-color: #000;
+    background-color: #fff;
+}
+
+QGraphicsView {
+    background-color: #fff;
 }
 
 QPushButton {
@@ -38,8 +46,9 @@ QPushButton {
 }
 
 QPushButton:hover {
-  background-color: #fff;
-}</string>
+    background-color: #fff;
+}
+</string>
   </property>
   <widget class="QLineEdit" name="lineEdit">
    <property name="geometry">
@@ -131,6 +140,9 @@ QPushButton:hover {
    <property name="value">
     <number>0</number>
    </property>
+   <property name="textVisible">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_3">
    <property name="geometry">
@@ -150,7 +162,7 @@ QPushButton:hover {
     <rect>
      <x>170</x>
      <y>150</y>
-     <width>31</width>
+     <width>30</width>
      <height>16</height>
     </rect>
    </property>

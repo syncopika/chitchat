@@ -26,7 +26,21 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QWidget {
+	background-color: #93cff4;
+}
+
+QMenuBar {
+	background-color: #6db1eb; 
+}
+
+QMenu { 
+	background-color: #6db1eb; 
+}
+
+QMenu::item { 
+	background-color: #6db1eb;
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
