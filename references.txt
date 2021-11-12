@@ -14,6 +14,12 @@ https://forum.qt.io/topic/63701/qwidget-s-children-destruction-mechanism
 https://stackoverflow.com/questions/18257864/get-qstring-length-in-bytes-not-characters
 https://stackoverflow.com/questions/13559990/how-to-append-text-to-qplaintextedit-without-adding-newline-and-keep-scroll-at
 https://forum.qt.io/topic/9939/solved-question-about-qiodevice-readyread-signal/7
+https://stackoverflow.com/questions/9762299/qt-how-to-make-mainwindow-automatically-resize-when-centralwidget-is-resized
+https://stackoverflow.com/questions/7138113/qt-graphics-view-show-image-widget
+https://stackoverflow.com/questions/23583913/overriding-qgraphicsview-paintevent-function-in-qt-designer
+https://stackoverflow.com/questions/17028680/qt5-c-qgraphicsview-images-dont-fit-view-frame
+https://stackoverflow.com/questions/6035001/does-a-qwidget-remove-itself-from-the-gui-on-destruction/6035494
+https://stackoverflow.com/questions/12025092/quality-of-image-deteriorates-when-used-fitinview-and-qtkeepaspectratio
 
 // qt with json
 https://stackoverflow.com/questions/19822211/qt-parsing-json-using-qjsondocument-qjsonobject-qjsonarray
@@ -21,6 +27,10 @@ https://stackoverflow.com/questions/15893040/how-to-create-read-write-json-files
 https://forum.qt.io/topic/97325/create-qcombobox-model-from-a-json/4
 https://stackoverflow.com/questions/23174393/parse-jsonarray
 https://stackoverflow.com/questions/21345113/how-to-serialize-a-qjsonobject
+
+// qt styling
+https://stackoverflow.com/questions/54160285/how-to-set-background-color-of-qcombobox-button
+https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qmenubar
 
 // golang stuff
 https://gist.github.com/kenshinx/5796276
@@ -32,17 +42,24 @@ any ntohs/l or htons/l stuff. endian is probably important when reading from the
 https://stackoverflow.com/questions/24837432/capitals-in-struct-fields
 https://stackoverflow.com/questions/38135518/value-set-on-struct-member-of-an-array-gets-lost-after-function-returns -> range loop gotcha
 https://stackoverflow.com/questions/20185511/range-references-instead-values
+https://stackoverflow.com/questions/11104085/does-a-break-statement-break-from-a-switch-select
 
 // networking stuff
 https://stackoverflow.com/questions/17916912/reading-from-reader-until-a-string-is-reached
 https://stackoverflow.com/questions/20288282/how-to-read-complete-data-in-qtcpsocket
 https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
+https://stackoverflow.com/questions/283375/detecting-tcp-client-disconnect
 
 // misc
 https://forum.qt.io/topic/84045/qt-getting-error-procedure-entry-point-could-not-be-located-in-dynamic-link-library-qt5core-dll/8 -> running exe
 
 
 // notes/TODO
-use heob to check for memory leaks
-- improve interface? also the size doesn't stay consistent after switching pages in the chat area
+- use heob to check for memory leaks?
+- improve interface?
+- use a different widget for displaying chat messages so we can easily show avatars? also then need to
+  send avatar image data around to clients... :/
+- for avatar:
+  - have some tooltip thing appear on hover over the white square on the login page? maybe use a QLabel? for visual
+    signal

@@ -107,7 +107,6 @@ void ChatArea::receiveMessage(){
         // in this case we're expecting a msg telling about a new client who joined
         // and a list of all currently connected users (in the same message)
         // the msg and the list of users will be separated by a semicolon for now
-
         qDebug() << "msg: " << msg;
         QStringList msgTokens = msg.split(";");
 
@@ -171,6 +170,14 @@ bool ChatArea::sendMessage(QString msg){
 void ChatArea::getUserData(UserData* data){
     userData = data;
     ui->usernameLabel->setText(*(data->username));
+
+    // show avatar
+    if(data->avatar){
+        QGraphicsView* view = ui->graphicsView;
+        view->setScene(data->avatar);
+        view->show();
+        view->fitInView(data->avatar->sceneRect());
+    }
 }
 
 void ChatArea::disconnect(){

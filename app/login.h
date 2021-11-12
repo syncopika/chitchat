@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpSocket>
+#include <QGraphicsPixmapItem>
 #include "userdata.h"
 
 namespace Ui {
@@ -32,6 +33,7 @@ public slots:
 
 private slots:
     void go();
+    void importAvatarImage();
     void connectedToServer();
     void disconnectedFromServer();
     void sendMessage();
@@ -39,6 +41,7 @@ private slots:
 public:
     void setUp();
     void resetProgressBar();
+
 private:
     Ui::Login* ui;
 
@@ -47,6 +50,10 @@ private:
     QString ipAddr;
     QString port;
     UserData* userdata;
+
+    // for keeping track of the avatar image
+    QGraphicsScene* scene;
+    QGraphicsPixmapItem* avatar;
 
     void tearDown();
     void sendGreeting();

@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(loginPage, SIGNAL(sendUserData(UserData*)), this, SLOT(getUserData(UserData*)));
     connect(loginPage, SIGNAL(goToChat()), this, SLOT(goToChat()));
     connect(this, SIGNAL(giveUserData(UserData*)), chatArea, SLOT(getUserData(UserData*)));
-    connect(stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(resize(int)));
+    connect(stackedWidget, SIGNAL(currentChanged(int)), this, SLOT(resize(int))); // currentChanged is a built-in signal
 }
 
 void MainWindow::goToLogin(){
@@ -74,10 +74,21 @@ void MainWindow::goToChat(){
     emit giveUserData(userData);
 }
 
+// this resizes the window after changing widgets/pages
+bool MainWindow::event(QEvent *event){
+    if(event->type() == QEvent::LayoutRequest){
+        setFixedSize(stackedWidget->currentWidget()->size());
+    }
+    return QMainWindow::event(event);
+}
+
 void MainWindow::resize(int index){
+    // this only affects the widgets and not the window
     QWidget* currWidget = stackedWidget->widget(index);
-    currWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    //currWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
     currWidget->adjustSize();
+
     adjustSize();
 }
 
@@ -87,7 +98,6 @@ void MainWindow::getUserData(UserData* data){
 }
 
 void MainWindow::setUpMenuBar(){
-
     // set up actions
     editEmoticonsAct = new QAction(tr("&edit emoticons"), this);
     goBackAct = new QAction(tr("&back to previous page"), this);
@@ -195,7 +205,7 @@ MainWindow::~MainWindow()
 {
     delete clientSocket;
     delete emoticonData;
-    delete stackedWidget;
-    delete userData;
+    delete stackedWidget; // this should delete all the child widgets we allocated
+    delete userData;      // this should delete username (Qstring*) and avatar (QGraphicsScene*) if they aren't null
     delete ui;
 }

@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 signals:
     void giveUserData(UserData* data);
@@ -61,6 +61,8 @@ private:
 
     void setUpMenuBar();
     void setUpEmoticons();
+
+    bool event(QEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

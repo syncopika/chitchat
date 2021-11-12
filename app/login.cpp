@@ -4,15 +4,24 @@
 
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QDir>
 
 Login::Login(QWidget *parent, QTcpSocket* socket) :
     QWidget(parent),
     ui(new Ui::Login)
 {
     ui->setupUi(this);
+
     QObject::connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(go()));
+    QObject::connect(ui->pushButton2, SIGNAL(clicked()), this, SLOT(importAvatarImage()));
+
     this->socket = socket;
-    this->userdata = nullptr;
+    userdata = nullptr;
+    scene = nullptr;
+    avatar = nullptr;
+
     setUp();
 }
 
@@ -93,6 +102,7 @@ void Login::connectedToServer()
 
     // collect avatar image + user info
     userdata->username = new QString(username);
+    userdata->avatar = scene;
 
     // emit signal to send its pointer to mainwindow
     emit sendUserData(userdata);
@@ -134,6 +144,34 @@ void Login::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
     }else{
         qDebug() << "Login: failed to connect to server :(";
         ui->progressBar->setValue(0);
+    }
+}
+
+void Login::importAvatarImage(){
+    QString filename = QFileDialog::getOpenFileName(this, "Open Image", QDir::currentPath());
+    if(!filename.isEmpty()){
+        QImage image(filename);
+
+        if(image.isNull()){
+            QMessageBox::information(this, "image view", "there was a problem loading the image");
+            return;
+        }
+
+        QGraphicsView* view = ui->graphicsView;
+        view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+        // create new scene
+        if(scene != nullptr){
+            delete scene;
+        }
+        scene = new QGraphicsScene();
+        view->setScene(scene);
+
+        avatar = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+        scene->addItem(avatar);
+
+        view->show();
+        view->fitInView(scene->sceneRect()); // still seems to leave some whitespace
     }
 }
 

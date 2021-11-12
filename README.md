@@ -17,7 +17,6 @@ current look:
 I'm using JSON for messages between the server and client.    
     
 ## TODO:    
-- make emoticon edit page/widget functional
 - loading emoticons from a saved json?
 - testing with multiple users
 - implement avatar feature

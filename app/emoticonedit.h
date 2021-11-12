@@ -5,7 +5,7 @@
 #include <QJsonObject>
 
 namespace Ui {
-class EmoticonEdit;
+    class EmoticonEdit;
 }
 
 class EmoticonEdit : public QWidget
