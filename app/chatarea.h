@@ -31,6 +31,7 @@ private:
     QString messageInput;
     UserData* userData;
     QJsonObject* emoticonData;
+    QGraphicsScene* scene;
 
     void setUp();
     void tearDown();

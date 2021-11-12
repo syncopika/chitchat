@@ -102,6 +102,7 @@ void Login::connectedToServer()
 
     // collect avatar image + user info
     userdata->username = new QString(username);
+    userdata->avatar = scene;
 
     // emit signal to send its pointer to mainwindow
     emit sendUserData(userdata);
@@ -146,8 +147,6 @@ void Login::connectToServer(QString& ipAddr, quint16 port, QTcpSocket* socket)
     }
 }
 
-// TODO: figure out how to actually use the image in chat
-// maybe mainwindow should hold the image data and pass that around as needed to wdigets?
 void Login::importAvatarImage(){
     QString filename = QFileDialog::getOpenFileName(this, "Open Image", QDir::currentPath());
     if(!filename.isEmpty()){
@@ -159,11 +158,18 @@ void Login::importAvatarImage(){
         }
 
         QGraphicsView* view = ui->graphicsView;
+        view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+        // create new scene
+        if(scene != nullptr){
+            delete scene;
+        }
         scene = new QGraphicsScene();
         view->setScene(scene);
 
         avatar = new QGraphicsPixmapItem(QPixmap::fromImage(image));
         scene->addItem(avatar);
+
         view->show();
         view->fitInView(scene->sceneRect()); // still seems to leave some whitespace
     }
@@ -171,13 +177,5 @@ void Login::importAvatarImage(){
 
 Login::~Login()
 {
-    // TODO: move this delete if moving these pointers to another widget
-    //qDebug() << scene;
-    //qDebug() << avatar;
-    delete avatar;
-    delete scene; // I think this might also delete this->avatar for us?
-    //qDebug() << scene;
-    //qDebug() << avatar;
-
     delete ui;
 }

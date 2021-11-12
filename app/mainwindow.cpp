@@ -98,7 +98,6 @@ void MainWindow::getUserData(UserData* data){
 }
 
 void MainWindow::setUpMenuBar(){
-
     // set up actions
     editEmoticonsAct = new QAction(tr("&edit emoticons"), this);
     goBackAct = new QAction(tr("&back to previous page"), this);
@@ -206,7 +205,7 @@ MainWindow::~MainWindow()
 {
     delete clientSocket;
     delete emoticonData;
-    delete stackedWidget;
-    delete userData;
+    delete stackedWidget; // this should delete all the child widgets we allocated
+    delete userData;      // this should delete username (Qstring*) and avatar (QGraphicsScene*) if they aren't null
     delete ui;
 }

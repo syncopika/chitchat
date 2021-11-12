@@ -18,6 +18,8 @@ https://stackoverflow.com/questions/9762299/qt-how-to-make-mainwindow-automatica
 https://stackoverflow.com/questions/7138113/qt-graphics-view-show-image-widget
 https://stackoverflow.com/questions/23583913/overriding-qgraphicsview-paintevent-function-in-qt-designer
 https://stackoverflow.com/questions/17028680/qt5-c-qgraphicsview-images-dont-fit-view-frame
+https://stackoverflow.com/questions/6035001/does-a-qwidget-remove-itself-from-the-gui-on-destruction/6035494
+https://stackoverflow.com/questions/12025092/quality-of-image-deteriorates-when-used-fitinview-and-qtkeepaspectratio
 
 // qt with json
 https://stackoverflow.com/questions/19822211/qt-parsing-json-using-qjsondocument-qjsonobject-qjsonarray
@@ -52,9 +54,11 @@ https://forum.qt.io/topic/84045/qt-getting-error-procedure-entry-point-could-not
 
 
 // notes/TODO
-use heob to check for memory leaks?
+- use heob to check for memory leaks?
+- profile golang server performance - CPU is getting maxed out when running for a while! :O
 - improve interface?
-
-- for uploading an avatar:
-  - have some tooltip thing appear on hover over the white square on the login page? maybe use a QLabel?
-  - need QFileDialog, QPixmap
+- use a different widget for displaying chat messages so we can easily show avatars? also then need to
+  send avatar image data around to clients... :/
+- for avatar:
+  - have some tooltip thing appear on hover over the white square on the login page? maybe use a QLabel? for visual
+    signal
