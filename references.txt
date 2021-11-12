@@ -42,12 +42,14 @@ any ntohs/l or htons/l stuff. endian is probably important when reading from the
 https://stackoverflow.com/questions/24837432/capitals-in-struct-fields
 https://stackoverflow.com/questions/38135518/value-set-on-struct-member-of-an-array-gets-lost-after-function-returns -> range loop gotcha
 https://stackoverflow.com/questions/20185511/range-references-instead-values
+https://stackoverflow.com/questions/11104085/does-a-break-statement-break-from-a-switch-select
 
 // networking stuff
 https://stackoverflow.com/questions/17916912/reading-from-reader-until-a-string-is-reached
 https://stackoverflow.com/questions/20288282/how-to-read-complete-data-in-qtcpsocket
 https://forum.qt.io/topic/100044/qtcpsocket-read-large-data-from-server/2
 https://stackoverflow.com/questions/40496433/why-qtcpsocket-doesnt-write-i-need-to-flush-it-to-make-it-send-my-data
+https://stackoverflow.com/questions/283375/detecting-tcp-client-disconnect
 
 // misc
 https://forum.qt.io/topic/84045/qt-getting-error-procedure-entry-point-could-not-be-located-in-dynamic-link-library-qt5core-dll/8 -> running exe
@@ -55,7 +57,6 @@ https://forum.qt.io/topic/84045/qt-getting-error-procedure-entry-point-could-not
 
 // notes/TODO
 - use heob to check for memory leaks?
-- profile golang server performance - CPU is getting maxed out when running for a while! :O
 - improve interface?
 - use a different widget for displaying chat messages so we can easily show avatars? also then need to
   send avatar image data around to clients... :/
